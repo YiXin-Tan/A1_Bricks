@@ -1,4 +1,5 @@
 print("hello world")
+print("this is from yixin")
 
-def add():
-    return NotImplementedError
+def add(a, b):
+    return a + b
