@@ -1,2 +1,4 @@
 print("hello world")
-print("this is from yixin")
+
+def add():
+    return NotImplementedError
