@@ -6,31 +6,71 @@ board = [
     [1, 0, 0, 0, 0, 0, 0],
     [1, 2, 2, 2, 0, 0, 0]
 ]
+zero_arr = []
+one_arr = []
+two_arr = []
+three_arr = []
+four_arr = []
+five_arr = []
+six_arr = []
+seven_arr = []
+index_vertical = 0
+num = 0
 
-one = 0
-two = 0
-three = 0
-four = 0
-five = 0
-six = 0
-seven = 0
 
+while num < len(board):
 
-
-for i, num in board:
     i = board[num]
-    for e in i:
-        a = 0
+    for index in i:
+        index = 0
+        index_in_i = 0
 
-        li = []
-        if i[e] == 1:
-            li.append(e)
+        # li = []
+        while index < len(i):
 
-            if li[a] == li[a+1] == li[a+2] == li[a+3]:
-                print(1)
-            li.clear()
-        elif i[e] == 2:
-            li.append(e)
-            if li[a] == li[a+1] == li[a+2] == li[a+3]:
-                print(2)
-            li.clear()
+            if i[index] == 1:
+                # li.append(index)
+
+                if i[index_in_i] == i[index_in_i+1] == i[index_in_i+2] == i[index_in_i+3]:
+                    print(1)
+                # li.clear()
+            elif i[index] == 2:
+                # li.append(index)
+                if li[index_in_i] == li[index_in_i+1] == li[index_in_i+2] == li[index_in_i+3]:
+                    print(2)
+                # li.clear()
+
+        index +=1
+
+
+    if index == 0 and len(i)> index_vertical:
+        zero_arr.append(i[index])
+
+
+
+
+
+
+
+
+    # for index_vertical in board:
+    #
+    #     index_vertical = 0
+    #     if index_vertical == 0:
+    #         zero_arr.append(i[index_vertical])
+    #
+    #     elif index_vertical == 1:
+    #         one_arr.append((i[index_vertical]))
+    #
+    #     elif index_vertical == 2:
+    #         two_arr.append(i[index_vertical])
+
+    num +=1
+
+
+
+    # for one in board:
+    #     one = 1
+    #     one_arr.append((i[one]))
+    #
+    # for two in board:
