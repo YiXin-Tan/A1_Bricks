@@ -1,5 +1,5 @@
 """
-FIT1045: Sem 1 2023 Assignment 1 (Solution Copy)
+FIT1045: Sem 1 2023 Assignment 1
 """
 import random
 import os
@@ -62,8 +62,8 @@ def create_board():
     col_num = 7
     new_board = []
 
-    for row_index in range(row_num):
-        row = [0] * col_num
+    for row_index in range(row_num):  # iterates for row_num (6) times to create row_num (6) rows
+        row = [0] * col_num  # each row contains col_num (7) slots
         new_board.append(row)
     return new_board
 
@@ -75,24 +75,22 @@ def print_board(board):
     :param board: The game board, 2D list of 6x7 dimensions.
     :return: None
     """
-    board_str = ""
-
+    board_str = ""  # initialize board (type str) to be returned
     header = "========== Connect4 ========="
     players = "Player 1: X       Player 2: O"
     margin = ""
     col_numbers = "  1   2   3   4   5   6   7"
     border_horizontal = " --- --- --- --- --- --- ---"
-    # board_str += (header + "\n" + border_top + "\n" + border_horizontal)
-    board_str += "\n".join([header, players, margin, col_numbers, border_horizontal])
+    board_str += "\n".join([header, players, margin, col_numbers, border_horizontal])  # each element will have it's own line
 
-    for row in board:
+    for row in board:  # iterate through 6 rows in the board
         board_str += "\n|"
-        for row_item in row:
-            if row_item == 0:  # if empty cell
+        for slot in row: # iterate through 7 slots in a row
+            if slot == 0:  # checks if the slot is empty
                 display_token = " "
-            elif row_item == 1:  # display player1's token
+            elif slot == 1:  # display "X" if player1's token exist in the slot
                 display_token = "X"
-            elif row_item == 2:  # display player2's token
+            elif slot == 2:  # display "O" if player2's token exist in the slot
                 display_token = "O"
             board_str += f" {display_token} |"
         board_str += ("\n" + border_horizontal)
@@ -113,7 +111,7 @@ def drop_piece(board, player, column):
     :return: True if piece was successfully dropped, False if not.
     """
     row_index_to_check = 5  # start checking from bottom-most row, check bottom-up
-    col_index_to_check = column - 1
+    col_index_to_check = column - 1  # index of first column is 0, while player input is 1
     while row_index_to_check >= 0:
         slot_to_check = board[row_index_to_check][col_index_to_check]
         if slot_to_check == 0:
@@ -133,7 +131,9 @@ def execute_player_turn(player, board):
     drop_successful = False
 
     while not drop_successful:
-        validated_col_option = validate_input(f'Player {player}, please enter the column you would like to drop your piece into: ', ['1', '2', '3', '4', '5', '6', '7'])
+        validated_col_option = validate_input(
+            f'Player {player}, please enter the column you would like to drop your piece into: ',
+            ['1', '2', '3', '4', '5', '6', '7'])
         drop_successful = drop_piece(board, player, validated_col_option)
         if drop_successful:
             return validated_col_option
@@ -212,7 +212,8 @@ def end_of_game(board):
         #     one_arr.append((i[one]))
         #
         # for two in board:
-    raise NotImplementedError
+
+    # raise NotImplementedError
 
 
 def local_2_player_game():
@@ -232,8 +233,20 @@ def main():
 
     :return: None
     """
-    # Implement your solution below
-    raise NotImplementedError
+    # test run case for main
+    board = create_board()
+    move = execute_player_turn(1, board)
+    print(move)
+    print_board(board)
+    while True:
+        move = execute_player_turn(2, board)
+        print(move)
+        print_board(board)
+        end_of_game(board)
+        move = execute_player_turn(1, board)
+        print(move)
+        print_board(board)
+        end_of_game(board)
 
 
 def cpu_player_easy(board, player):
