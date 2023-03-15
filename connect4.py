@@ -41,8 +41,14 @@ def validate_input(prompt, valid_inputs):
     :param valid_inputs: The range of values to accept, list
     :return: The user's input, string.
     """
-    # Implement your solution below
-    raise NotImplementedError
+    valid_input = False
+    while not valid_input:
+        option = input(prompt)
+        if option in valid_inputs:
+            valid_input = True
+            return int(option)
+        else:
+            print('Invalid input, please try again.')
 
 
 def create_board():
@@ -52,8 +58,14 @@ def create_board():
 
     :return: A 2D list of 6x7 dimensions.
     """
-    # Implement your solution below
-    raise NotImplementedError
+    row_num = 6
+    col_num = 7
+    new_board = []
+
+    for row_index in range(row_num):
+        row = [0] * col_num
+        new_board.append(row)
+    return new_board
 
 
 def print_board(board):
@@ -63,8 +75,30 @@ def print_board(board):
     :param board: The game board, 2D list of 6x7 dimensions.
     :return: None
     """
-    # Implement your solution below
-    raise NotImplementedError
+    board_str = ""
+
+    header = "========== Connect4 ========="
+    players = "Player 1: X       Player 2: O"
+    margin = ""
+    col_numbers = "  1   2   3   4   5   6   7"
+    border_horizontal = " --- --- --- --- --- --- ---"
+    # board_str += (header + "\n" + border_top + "\n" + border_horizontal)
+    board_str += "\n".join([header, players, margin, col_numbers, border_horizontal])
+
+    for row in board:
+        board_str += "\n|"
+        for row_item in row:
+            if row_item == 0:  # if empty cell
+                display_token = " "
+            elif row_item == 1:  # display player1's token
+                display_token = "X"
+            elif row_item == 2:  # display player2's token
+                display_token = "O"
+            board_str += f" {display_token} |"
+        board_str += ("\n" + border_horizontal)
+    footer = "============================="
+    board_str += ("\n" + footer)
+    print(board_str)
 
 
 def drop_piece(board, player, column):
@@ -78,8 +112,15 @@ def drop_piece(board, player, column):
     :param column: The index of column to drop the piece into, int.
     :return: True if piece was successfully dropped, False if not.
     """
-    # Implement your solution below
-    raise NotImplementedError
+    row_index_to_check = 5  # start checking from bottom-most row, check bottom-up
+    col_index_to_check = column - 1
+    while row_index_to_check >= 0:
+        slot_to_check = board[row_index_to_check][col_index_to_check]
+        if slot_to_check == 0:
+            board[row_index_to_check][col_index_to_check] = player
+            return True
+        row_index_to_check -= 1
+    return False
 
 
 def execute_player_turn(player, board):
@@ -89,8 +130,14 @@ def execute_player_turn(player, board):
 
     :return: Column that the piece was dropped into, int.
     """
-    # Implement your solution below
-    raise NotImplementedError
+    drop_successful = False
+
+    while not drop_successful:
+        validated_col_option = validate_input(f'Player {player}, please enter the column you would like to drop your piece into: ', ['1', '2', '3', '4', '5', '6', '7'])
+        drop_successful = drop_piece(board, player, validated_col_option)
+        if drop_successful:
+            return validated_col_option
+        print('That column is full, please try again.')
 
 
 def end_of_game(board):
