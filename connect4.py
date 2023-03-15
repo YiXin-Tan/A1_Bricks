@@ -148,14 +148,14 @@ def end_of_game(board):
     :param board: The game board, 2D list of 6 rows x 7 columns.
     :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, 3 if draw.
     """
-    # board = [
-    #     [0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0],
-    #     [1, 0, 0, 0, 0, 0, 0],
-    #     [1, 0, 0, 0, 0, 0, 0],
-    #     [1, 2, 2, 2, 2, 0, 0]
-    # ]
+    board = [
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0],
+        [1, 2, 2, 2, 2, 0, 0]
+    ]
     zero_arr = []
     one_arr = []
     two_arr = []
@@ -166,32 +166,66 @@ def end_of_game(board):
     seven_arr = []
     index_vertical = 0
     num = 0
+    index_li_of_one = 0
+    index_li_of_two = 0
+    li_of_1 = []
+    li_of_2 = []
+
+    is_end_of_game = False
 
     while num < len(board):
         # print(len(board))
         i = board[num]
         index_in_i = 0
 
-        # li = []
         while index_in_i < len(i):
             # print (len(i))
             if i[index_in_i] == 1:
-                # li.append(index)
+                # print(index_in_i)
+                li_of_1.append(index_in_i)
+                # print(li_of_1)
                 if i[index_in_i] == i[index_in_i + 1] == i[index_in_i + 2] == i[index_in_i + 3]:
                     print(1)
+                    is_end_of_game = True
+                    break
                 # li.clear()
+
             elif i[index_in_i] == 2:
-                # li.append(index)
+                li_of_2.append(index_in_i)
                 if i[index_in_i] == i[index_in_i + 1] == i[index_in_i + 2] == i[index_in_i + 3]:
                     print(2)
+                    is_end_of_game = True
+                    break
 
                 # li.clear()
 
             index_in_i += 1
             # print(index_in_i)
 
+        # save the index of every 1 in i[0]
+        if len(li_of_1) >= 4:
+            while index_li_of_one < len(li_of_1) - 4:
+                if li_of_1[index_li_of_one] == li_of_1[index_li_of_one + 1] == li_of_1[index_li_of_one + 2] == li_of_1[
+                    index_li_of_one + 3]:
+                    print(1)
+                    is_end_of_game = True
+                    break
+
+                index_li_of_one += 1
+
+        if len(li_of_2) >= 4:
+            while index_li_of_two < len(li_of_2) - 4:
+                if li_of_2[index_li_of_one] == li_of_2[index_li_of_one + 1] == li_of_2[index_li_of_one + 2] == li_of_2[
+                    index_li_of_one + 3]:
+                    print(2)
+                    is_end_of_game = True
+                    break
+
+                index_li_of_two += 1
         num = num + 1
-        print(num)
+
+    if is_end_of_game == False:
+        print(0)
         # if index == 0 and len(i)> index_vertical:
         #     zero_arr.append(i[index])
 
@@ -213,7 +247,7 @@ def end_of_game(board):
         #
         # for two in board:
 
-    # raise NotImplementedError
+    raise NotImplementedError
 
 
 def local_2_player_game():
