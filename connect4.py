@@ -4,7 +4,7 @@ FIT1045: Sem 1 2023 Assignment 1
 import random
 import os
 
-
+#hello
 def clear_screen():
     """
     Clears the terminal for Windows and Linux/MacOS.
