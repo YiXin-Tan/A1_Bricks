@@ -151,19 +151,12 @@ def end_of_game(board):
     board = [
         [0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0, 0],
-        [1, 2, 2, 2, 2, 0, 0]
+        [0, 0, 0, 1, 1, 1, 0],
+        [1, 0, 0, 1, 0, 0, 0],
+        [1, 1, 0, 1, 0, 2, 0],
+        [1, 1, 2, 2, 2, 2, 0]
     ]
-    zero_arr = []
-    one_arr = []
-    two_arr = []
-    three_arr = []
-    four_arr = []
-    five_arr = []
-    six_arr = []
-    seven_arr = []
+
     index_vertical = 0
     num = 0
     index_li_of_one = 0
@@ -178,7 +171,7 @@ def end_of_game(board):
         i = board[num]
         index_in_i = 0
 
-        while index_in_i < len(i):
+        while index_in_i < len(i) - 3:
             # print (len(i))
             if i[index_in_i] == 1:
                 # print(index_in_i)
@@ -203,49 +196,55 @@ def end_of_game(board):
             # print(index_in_i)
 
         # save the index of every 1 in i[0]
-        if len(li_of_1) >= 4:
-            while index_li_of_one < len(li_of_1) - 4:
-                if li_of_1[index_li_of_one] == li_of_1[index_li_of_one + 1] == li_of_1[index_li_of_one + 2] == li_of_1[
-                    index_li_of_one + 3]:
-                    print(1)
-                    is_end_of_game = True
-                    break
+        # if len(li_of_1) >= 4:
+        #     while index_li_of_one < len(li_of_1) - 4:
+        #         if li_of_1[index_li_of_one] == li_of_1[index_li_of_one + 1] == li_of_1[index_li_of_one + 2] == li_of_1[
+        #             index_li_of_one + 3]:
+        #             print(1)
+        #             is_end_of_game = True
+        #             break
+        #
+        #         index_li_of_one += 1
+        #
+        # if len(li_of_2) >= 4:
+        #     while index_li_of_two < len(li_of_2) - 4:
+        #         if li_of_2[index_li_of_one] == li_of_2[index_li_of_one + 1] == li_of_2[index_li_of_one + 2] == li_of_2[
+        #             index_li_of_one + 3]:
+        #             print(2)
+        #             is_end_of_game = True
+        #             break
+        #
+        #         index_li_of_two += 1
 
-                index_li_of_one += 1
-
-        if len(li_of_2) >= 4:
-            while index_li_of_two < len(li_of_2) - 4:
-                if li_of_2[index_li_of_one] == li_of_2[index_li_of_one + 1] == li_of_2[index_li_of_one + 2] == li_of_2[
-                    index_li_of_one + 3]:
-                    print(2)
-                    is_end_of_game = True
-                    break
-
-                index_li_of_two += 1
         num = num + 1
+
+    row = 0
+
+    while row <= 2:
+        current_row = board[row]
+        second_row = board[row + 1]
+        thrid_row = board[row + 2]
+        fourth_row = board[row + 3]
+        index_in_row = 0
+        while index_in_row <= len(board[row]) - 1:
+
+            if (current_row[index_in_row] == 1) and (second_row[index_in_row] == 1) and (
+                    thrid_row[index_in_row] == 1) and (fourth_row[index_in_row] == 1):
+                print(1)
+                is_end_of_game = True
+                break
+            elif (current_row[index_in_row] == 2) and (second_row[index_in_row] == 2) and (
+                    thrid_row[index_in_row] == 2) and (fourth_row[index_in_row] == 2):
+                print(2)
+                is_end_of_game = True
+                break
+            index_in_row += 1
+
+        row += 1
+        index_in_row = 0
 
     if is_end_of_game == False:
         print(0)
-        # if index == 0 and len(i)> index_vertical:
-        #     zero_arr.append(i[index])
-
-        # for index_vertical in board:
-        #
-        #     index_vertical = 0
-        #     if index_vertical == 0:
-        #         zero_arr.append(i[index_vertical])
-        #
-        #     elif index_vertical == 1:
-        #         one_arr.append((i[index_vertical]))
-        #
-        #     elif index_vertical == 2:
-        #         two_arr.append(i[index_vertical])
-
-        # for one in board:
-        #     one = 1
-        #     one_arr.append((i[one]))
-        #
-        # for two in board:
 
     raise NotImplementedError
 
