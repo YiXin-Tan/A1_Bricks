@@ -148,13 +148,38 @@ def end_of_game(board):
     :param board: The game board, 2D list of 6 rows x 7 columns.
     :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, 3 if draw.
     """
+    # # This is a sample Python script.
+    #
+    # # Press Shift+F10 to execute it or replace it with your code.
+    # # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+    #
+    #
+    # def print_hi(name):
+    #     # Use a breakpoint in the code line below to debug your script.
+    #     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    #
+    #
+    # # Press the green button in the gutter to run the script.
+    # if __name__ == '__main__':
+    #     print_hi('PyCharm')
+    #
+    # # See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # my_list = ['purple', 'blue', 'grey']
+    # x = []
+    # x = list(my_list)
+    # my_list.append('red')
+    # print(x)
+    #
+    #
+    #
+    #
     board = [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 1, 0],
-        [1, 0, 0, 1, 0, 0, 0],
-        [1, 1, 0, 1, 0, 2, 0],
-        [1, 1, 2, 2, 2, 2, 0]
+        [0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 1, 0, 1, 0, 0],
+        [0, 0, 0, 1, 0, 1, 0],
+        [1, 0, 1, 1, 2, 0, 0],
+        [1, 1, 0, 1, 2, 2, 0],
+        [0, 1, 2, 2, 2, 0, 0]
     ]
 
     index_vertical = 0
@@ -242,7 +267,39 @@ def end_of_game(board):
 
         row += 1
         index_in_row = 0
-
+    row = 0
+    while row < 2:
+        current_row = board[row]
+        second_row = board[row + 1]
+        thrid_row = board[row + 2]
+        fourth_row = board[row + 3]
+        index_in_row = 0
+        while index_in_row <= len(board[row]) - 1:
+            if index_in_row <= len(board[row]) - 5:
+                if (current_row[index_in_row] == 1) and (second_row[index_in_row + 1] == 1) and (
+                        thrid_row[index_in_row + 2] == 1) and (fourth_row[index_in_row + 3] == 1):
+                    print(1)
+                    is_end_of_game = True
+                    break
+            elif (current_row[index_in_row] == 1) and (second_row[index_in_row - 1] == 1) and (
+                    thrid_row[index_in_row - 2] == 1) and (fourth_row[index_in_row - 3] == 1):
+                print(1)
+                is_end_of_game = True
+                break
+            elif index_in_row <= len(board[row]) - 5:
+                if (current_row[index_in_row] == 2) and (second_row[index_in_row + 1] == 2) and (
+                        thrid_row[index_in_row + 2] == 2) and (fourth_row[index_in_row + 3] == 2):
+                    print(2)
+                    is_end_of_game = True
+                    break
+            elif (current_row[index_in_row] == 2) and (second_row[index_in_row - 1] == 2) and (
+                    thrid_row[index_in_row - 2] == 2) and (fourth_row[index_in_row - 3] == 2):
+                print(1)
+                is_end_of_game = True
+                break
+            index_in_row += 1
+        row += 1
+        index_in_row = 0
     if is_end_of_game == False:
         print(0)
 
