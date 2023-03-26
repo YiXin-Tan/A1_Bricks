@@ -46,7 +46,7 @@ def validate_input(prompt, valid_inputs):
         option = input(prompt)
         if option in valid_inputs:
             valid_input = True
-            return int(option)
+            return option
         else:
             print('Invalid input, please try again.')
 
@@ -134,7 +134,7 @@ def execute_player_turn(player, board):
         validated_col_option = validate_input(
             f'Player {player}, please enter the column you would like to drop your piece into: ',
             ['1', '2', '3', '4', '5', '6', '7'])
-        drop_successful = drop_piece(board, player, validated_col_option)
+        drop_successful = drop_piece(board, player, int(validated_col_option))
         if drop_successful:
             return validated_col_option
         print('That column is full, please try again.')
@@ -322,14 +322,37 @@ def local_2_player_game():
 
 
 def main():
-    """
-    Defines the main application loop.
+	"""
+	Defines the main application loop.
     User chooses a type of game to play or to exit.
 
-    :return: None
-    """
-    # test run case for main
-    local_2_player_game()
+	:return: None
+	"""
+	menu_string = """=============== Main Menu ===============
+Welcome to Connect 4!
+1. View Rules
+2. Play a local 2 player game
+3. Play a game against the computer
+4. Exit
+=========================================
+Enter a number: """
+	clear_screen()
+	while True:
+		user_input = validate_input(
+			prompt=menu_string,
+			valid_inputs=["1", "2", "3", "4"]
+		)
+		if user_input == "1":
+			clear_screen()
+			print_rules()
+		if user_input == "2":
+			return local_2_player_game()
+		if user_input == "3":
+			print("not implemented yet")
+		if user_input == "4":
+			print("You have exited the game")
+			return
+
 
 def cpu_player_easy(board, player):
     """
