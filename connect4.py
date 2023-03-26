@@ -140,171 +140,150 @@ def execute_player_turn(player, board):
         print('That column is full, please try again.')
 
 
-def end_of_game(board):
-    """
-    Checks if the game has ended with a winner
-    or a draw.
+def end_of_game(board): # Task 6
+	"""
+	Checks if the game has ended with a winner
+	or a draw.
 
-    :param board: The game board, 2D list of 6 rows x 7 columns.
-    :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, 3 if draw.
-    """
-    # # This is a sample Python script.
-    #
-    # # Press Shift+F10 to execute it or replace it with your code.
-    # # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-    #
-    #
-    # def print_hi(name):
-    #     # Use a breakpoint in the code line below to debug your script.
-    #     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-    #
-    #
-    # # Press the green button in the gutter to run the script.
-    # if __name__ == '__main__':
-    #     print_hi('PyCharm')
-    #
-    # # See PyCharm help at https://www.jetbrains.com/help/pycharm/
-    # my_list = ['purple', 'blue', 'grey']
-    # x = []
-    # x = list(my_list)
-    # my_list.append('red')
-    # print(x)
-    #
-    #
-    #
-    #
-    board = [
-        [0, 0, 1, 0, 0, 0, 0],
-        [0, 0, 1, 0, 1, 0, 0],
-        [0, 0, 0, 1, 0, 1, 0],
-        [1, 0, 1, 1, 2, 0, 0],
-        [1, 1, 0, 1, 2, 2, 0],
-        [0, 1, 2, 2, 2, 0, 0]
-    ]
+	:param board: The game board, 2D list of 6 rows x 7 columns.
+	:return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, 3 if draw.
+	"""
 
-    index_vertical = 0
-    num = 0
-    index_li_of_one = 0
-    index_li_of_two = 0
-    li_of_1 = []
-    li_of_2 = []
+			
+	# player has won
+	player_has_won = get_winning_player(board) # this is either 0, 1 or 2
+	if player_has_won != 0:
+		return player_has_won
+	
+	# board is full
+	if board_is_full(board):
+		return 3
 
-    is_end_of_game = False
+	# game is not over
+	return 0
 
-    while num < len(board):
-        # print(len(board))
-        i = board[num]
-        index_in_i = 0
 
-        while index_in_i < len(i) - 3:
-            # print (len(i))
-            if i[index_in_i] == 1:
-                # print(index_in_i)
-                li_of_1.append(index_in_i)
-                # print(li_of_1)
-                if i[index_in_i] == i[index_in_i + 1] == i[index_in_i + 2] == i[index_in_i + 3]:
-                    print(1)
-                    is_end_of_game = True
-                    break
-                # li.clear()
+def board_is_full(board) -> bool:
+	"""
+	Checks if the board is full
 
-            elif i[index_in_i] == 2:
-                li_of_2.append(index_in_i)
-                if i[index_in_i] == i[index_in_i + 1] == i[index_in_i + 2] == i[index_in_i + 3]:
-                    print(2)
-                    is_end_of_game = True
-                    break
+	:param board: The game board, 2D list of 6 rows x 7 columns.
+	:return: true if full else false
+	"""
+	
+	"""
+	check every number slot in board
+	if any slot has a 0 then return false
+	if no slot is 0 return True
+	"""
 
-                # li.clear()
+	for row in board:
+		for num in row:
+			if num == 0:
+				return False
+	return True
+		
 
-            index_in_i += 1
-            # print(index_in_i)
+def get_winning_player(board) -> int:
+	"""
+	Checks if there is a winning player
 
-        # save the index of every 1 in i[0]
-        # if len(li_of_1) >= 4:
-        #     while index_li_of_one < len(li_of_1) - 4:
-        #         if li_of_1[index_li_of_one] == li_of_1[index_li_of_one + 1] == li_of_1[index_li_of_one + 2] == li_of_1[
-        #             index_li_of_one + 3]:
-        #             print(1)
-        #             is_end_of_game = True
-        #             break
-        #
-        #         index_li_of_one += 1
-        #
-        # if len(li_of_2) >= 4:
-        #     while index_li_of_two < len(li_of_2) - 4:
-        #         if li_of_2[index_li_of_one] == li_of_2[index_li_of_one + 1] == li_of_2[index_li_of_one + 2] == li_of_2[
-        #             index_li_of_one + 3]:
-        #             print(2)
-        #             is_end_of_game = True
-        #             break
-        #
-        #         index_li_of_two += 1
+	:param board: The game board, 2D list of 6 rows x 7 columns.
+	:return: 0 if no winner, 1 if player 1 wins, 2 if player 2 wins
+	"""
+	# i = 0 
+	# j = 0
+	# element = board[i][j]
 
-        num = num + 1
+	"""
+	check horizontal:
+	1. Go through each row in board
+	2. For each row:
+		a) check if any 4 adjacent slots are equal to each other 
+			i) if they are equal: 
+				return 1 if slots have 1s in them
+				return 2 if slots have 2s in them
 
-    row = 0
+	"""
 
-    while row <= 2:
-        current_row = board[row]
-        second_row = board[row + 1]
-        thrid_row = board[row + 2]
-        fourth_row = board[row + 3]
-        index_in_row = 0
-        while index_in_row <= len(board[row]) - 1:
+	# Checks if numbers in each row are not 1 or 2 (i.e no winners)
+	# for row in board:
+	# 	for i in range(len(row)-3):
+	# 		if row[i] != 1 or row[i] != 2:
+	# 			return 0
 
-            if (current_row[index_in_row] == 1) and (second_row[index_in_row] == 1) and (
-                    thrid_row[index_in_row] == 1) and (fourth_row[index_in_row] == 1):
-                print(1)
-                is_end_of_game = True
-                break
-            elif (current_row[index_in_row] == 2) and (second_row[index_in_row] == 2) and (
-                    thrid_row[index_in_row] == 2) and (fourth_row[index_in_row] == 2):
-                print(2)
-                is_end_of_game = True
-                break
-            index_in_row += 1
+	
+	# Checking for horizontal win
+	for row in board:
+		# we subtract 3 from the length of the row as we only need to check 4 adjacent slots
+		# looking at a row [0, 0, 0, 0, 0, 0, 0]
+			# if we start at i=0, the first 4 slots will be checked (0,1,2,3)
+			# if we then go to i=1, indexes 1,2,3,4 will be checked
+				# continuing this cycle we want to stop when we cant check 4 slots, (i.e when i= 4, 5, 6) otherwise out of range error will occur
+		for i in range(len(row)-3):
+			if row[i] == row[i+1] == row[i+2] == row[i+3] == 1:
+				return 1
+			elif row[i] == row[i+1] == row[i+2] == row[i+3] == 2:
+				return 2
+	
+	
+	
 
-        row += 1
-        index_in_row = 0
-    row = 0
-    while row < 2:
-        current_row = board[row]
-        second_row = board[row + 1]
-        thrid_row = board[row + 2]
-        fourth_row = board[row + 3]
-        index_in_row = 0
-        while index_in_row <= len(board[row]) - 1:
-            if index_in_row <= len(board[row]) - 5:
-                if (current_row[index_in_row] == 1) and (second_row[index_in_row + 1] == 1) and (
-                        thrid_row[index_in_row + 2] == 1) and (fourth_row[index_in_row + 3] == 1):
-                    print(1)
-                    is_end_of_game = True
-                    break
-            elif (current_row[index_in_row] == 1) and (second_row[index_in_row - 1] == 1) and (
-                    thrid_row[index_in_row - 2] == 1) and (fourth_row[index_in_row - 3] == 1):
-                print(1)
-                is_end_of_game = True
-                break
-            elif index_in_row <= len(board[row]) - 5:
-                if (current_row[index_in_row] == 2) and (second_row[index_in_row + 1] == 2) and (
-                        thrid_row[index_in_row + 2] == 2) and (fourth_row[index_in_row + 3] == 2):
-                    print(2)
-                    is_end_of_game = True
-                    break
-            elif (current_row[index_in_row] == 2) and (second_row[index_in_row - 1] == 2) and (
-                    thrid_row[index_in_row - 2] == 2) and (fourth_row[index_in_row - 3] == 2):
-                print(1)
-                is_end_of_game = True
-                break
-            index_in_row += 1
-        row += 1
-        index_in_row = 0
-    if is_end_of_game == False:
-        print(0)
+	# Checking for vertical win 
+	# this will be the range of the first row, as board[0] is row 1
+	# so we are iterating through the range of 7 (0 to 6)
+	for i in range(len(board[0])):
 
-    raise NotImplementedError
+		# Remember that length of board is the number of rows in the board. (board is a list of lists)
+		# subtract 3 is same reason for testing horizontally 
+		for j in range(len(board)-3):
+			# print(len(board)): will output 6 for 6 rows
 
+			# index 'j' increments for each test as we are moving down 1 row for every j+1 (testing vertically)
+			if board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 1:
+				return 1
+			elif board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 2:
+				return 2
+
+	
+
+	# Checking diagonal wins
+	# subtract 3 from length of board as only need to iterate to 3rd row
+		# at rows 4-6, and go diagonally down to the right there are only 3, 2, and 1 blocks adjacent (so cannot be any wins here)
+	for i in range(len(board)-3):
+		
+		# 7 elements in each row. last element where there can be a win diagonally to the right is at board[0][3], i.e element 4
+			# from elements 5-7, check diagonally down to the right, there are only 3, 2 and 1 blocks respectively adjacent
+		for j in range(len(board[0])-3):
+
+			"""
+			these 'for loops' have created a rectangle: 4 to the right and 3 down in the board starting at [0][0] (as a range for where diagonals can be checked from)
+			- the same will be done for checking diagonals right to left
+			"""
+			
+
+			# right to left diagonal win
+
+			if board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 1:
+				return 1
+			elif board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 2:
+				return 2
+
+			
+			# left to right diagonal win
+			# -j as we want to start from right side (i.e board[0][6])
+				# if j = 0, then -j = -0
+				# if j = 1, then -j = -1
+				# so on
+			# i remains the same as adding 1 to the index will still go down a row
+			
+			if board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 1:
+				return 1
+			elif board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 2:
+				return 2
+				
+		# Return 0 (no winner yet): this is outside each 'for loop' (let loops iterate first, if no winner found then only return 0)
+	return 0
 
 def local_2_player_game():
     """
