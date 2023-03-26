@@ -286,13 +286,39 @@ def get_winning_player(board) -> int:
 	return 0
 
 def local_2_player_game():
-    """
-    Runs a local 2 player game of Connect 4.
+	"""
+	Runs a local 2 player game of Connect 4.
 
-    :return: None
-    """
-    # Implement your solution below
-    raise NotImplementedError
+	:return: None
+	"""
+	# Implement your solution below
+	board = create_board()
+	current_player = 1 # either 1 or 2
+
+	while True:
+		clear_screen()
+		# execute the turn
+		print_board(board)
+		execute_player_turn(current_player, board)
+		check_winner = end_of_game(board)
+		if check_winner == 1:
+			clear_screen()
+			print_board(board)
+			print("Player 1 wins")
+			break
+		elif check_winner == 2:
+			clear_screen()
+			print_board(board)
+			print("Player 2 wins")
+			break
+		elif check_winner == 3:
+			clear_screen()
+			print_board(board)
+			print("Draw")
+			break
+
+		# change the Player
+		current_player = 2 if current_player == 1 else 1
 
 
 def main():
@@ -303,20 +329,7 @@ def main():
     :return: None
     """
     # test run case for main
-    board = create_board()
-    move = execute_player_turn(1, board)
-    print(move)
-    print_board(board)
-    while True:
-        move = execute_player_turn(2, board)
-        print(move)
-        print_board(board)
-        end_of_game(board)
-        move = execute_player_turn(1, board)
-        print(move)
-        print_board(board)
-        end_of_game(board)
-
+    local_2_player_game()
 
 def cpu_player_easy(board, player):
     """
