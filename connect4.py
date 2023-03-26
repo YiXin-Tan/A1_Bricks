@@ -293,13 +293,24 @@ def local_2_player_game():
 	"""
 	# Implement your solution below
 	board = create_board()
-	current_player = 1 # either 1 or 2
+	
+    # initial player is assigned 1
+	current_player = 1 
+	# There is no previous column choice to tell players
+	prev_col_choice = None
 
 	while True:
 		clear_screen()
 		# execute the turn
 		print_board(board)
-		execute_player_turn(current_player, board)
+
+		# if there was a previous move (turn 1 has no previous move), then print that out
+		if prev_col_choice:
+			# '2 if current_player==1 else 1' only switches player inside print function
+			print(f'Player {2 if current_player==1 else 1} has dropped in {prev_col_choice}')
+
+		prev_col_choice = execute_player_turn(current_player, board)
+		
 		check_winner = end_of_game(board)
 		if check_winner == 1:
 			clear_screen()
