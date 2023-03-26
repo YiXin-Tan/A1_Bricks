@@ -359,7 +359,7 @@ Enter a number: """
 		if user_input == "2":
 			return local_2_player_game()
 		if user_input == "3":
-			print("not implemented yet")
+			return game_against_cpu()
 		if user_input == "4":
 			print("You have exited the game")
 			return
@@ -412,14 +412,79 @@ def cpu_player_hard(board, player):
     raise NotImplementedError
 
 
-def game_against_cpu():
-    """
-    Runs a game of Connect 4 against the computer.
+def get_cpu_difficulty() -> int:
+	"""
+	Gets the difficulty of the CPU
+	Asks the user what difficulty they would like to play against
 
-    :return: None
-    """
-    # Implement your solution below
-    raise NotImplementedError
+	:return int: 1 = easy, 2 = medium, 3 = hard
+	use validate_input
+	"""
+	
+	user_input = int(validate_input(prompt = "Please select a difficulty (1: Easy, 2: Medium, 3; Hard): ", valid_inputs = ["1", "2", "3"]))
+	return user_input
+
+def game_against_cpu():
+	"""
+	Runs a game of Connect 4 against the computer.
+
+	:return: None
+	"""
+	board = create_board()
+	
+    # initial player is assigned 1
+	current_player = 1 
+	# There is no previous column choice to tell players
+	prev_col_choice = None
+
+	# get cpu difficulty (1 = easy, 2 = med, 3 = hard)
+	cpu_difficulty: int = get_cpu_difficulty()
+
+	while True:
+		clear_screen()
+		# execute the turn
+		print_board(board)
+
+		# if there was a previous move (turn 1 has no previous move), then print that out
+		if prev_col_choice:
+			# '2 if current_player==1 else 1' will only switch player inside print function as current_player switched at bottom of function
+			print(f'Player {2 if current_player== 1 else 1} has dropped in {prev_col_choice}')
+
+		if current_player == 1:
+			prev_col_choice = execute_player_turn(current_player, board)
+		elif current_player == 2:
+			# this is the cpu turn
+
+			# Easy difficulty
+			if cpu_difficulty == 1:
+				prev_col_choice = cpu_player_easy(board, current_player)
+
+			if cpu_difficulty == 2:
+				print("Not implemented yet")
+				return
+			if cpu_difficulty == 3:
+				print("Not implemented yet")
+				return
+		
+		check_winner = end_of_game(board)
+		if check_winner == 1:
+			clear_screen()
+			print_board(board)
+			print("Player 1 wins")
+			break
+		elif check_winner == 2:
+			clear_screen()
+			print_board(board)
+			print("Player 2 wins")
+			break
+		elif check_winner == 3:
+			clear_screen()
+			print_board(board)
+			print("Draw")
+			break
+
+		# change the Player
+		current_player = 2 if current_player == 1 else 1
 
 
 if __name__ == "__main__":
