@@ -381,21 +381,81 @@ def cpu_player_easy(board, player):
 		if cpu_has_dropped:
 			return ran_int
 
+def clone_board(board):
+	"""
+	Creates a deep clone of the param board
 
+	:param board: the board
+	:return: cloned board
+	"""
+	# create board of same number of rows and height
+	cloned_board = create_board()
+	# for each item in the param board, copy over to cloned board
+
+	for i in range(len(board)):
+	# for each value in each row
+		for j in range(len(board[0])):
+			cloned_board[i][j] = board[i][j]
+	return cloned_board
+
+
+	# return the cloned board 
+	
 def cpu_player_medium(board, player):
-    """
-    Executes a move for the CPU on medium difficulty.
-    It first checks for an immediate win and plays that move if possible.
-    If no immediate win is possible, it checks for an immediate win
-    for the opponent and blocks that move. If neither of these are
-    possible, it plays a random move.
+	"""
+	Executes a move for the CPU on medium difficulty.
+	It first checks for an immediate win and plays that move if possible. 
+	If no immediate win is possible, it checks for an immediate win 
+	for the opponent and blocks that move. If neither of these are 
+	possible, it plays a random move.
 
-    :param board: The game board, 2D list of 6x7 dimensions.
-    :param player: The player whose turn it is, integer value of 1 or 2.
-    :return: Column that the piece was dropped into, int.
-    """
-    # Implement your solution below
-    raise NotImplementedError
+	:param board: The game board, 2D list of 6x7 dimensions.
+	:param player: The player whose turn it is, integer value of 1 or 2.
+	:return: Column that the piece was dropped into, int.
+	"""
+	
+	"""
+	1. Play a move that results in immediate win
+	2. Check if oppenent can score immediate win
+		block this 
+	3. if none then play random drop
+	"""
+	
+	# for each col
+	# clone the board
+	# drop the piece into the cloned board
+	# if this wins the game, drop the piece into the real board and return the column
+
+	for j in range(len(board[0])):
+		# print(j)
+		cloned_board = clone_board(board)
+		cpu_drop = drop_piece(cloned_board, player, j)
+		if cpu_drop:
+			if get_winning_player(cloned_board) == player:
+				drop_piece(board, player, j)
+				return j
+
+	# check opponent block
+	for j in range(len(board[0])):
+		cloned_board = clone_board(board)
+		opponent = 2 if player == 1 else 1
+		player_win = drop_piece(cloned_board, opponent, j)
+		if player_win:
+			if get_winning_player(cloned_board) == opponent:
+				drop_piece(board, player, j)
+				return j
+
+	# for i in range(len(board)):
+	# 	for j in range(len(board[0])):
+	# 		if board[i][j] == 0:
+	# 			board[i][j] = player_piece
+	# 			if get_winning_player == player_piece:
+	# 				board[i][j] = cpu_piece
+	# 				return cpu_piece
+	
+	return cpu_player_easy(board, player)
+
+
 
 
 def cpu_player_hard(board, player):
@@ -460,8 +520,8 @@ def game_against_cpu():
 				prev_col_choice = cpu_player_easy(board, current_player)
 
 			if cpu_difficulty == 2:
-				print("Not implemented yet")
-				return
+				prev_col_choice = cpu_player_medium(board, current_player)
+
 			if cpu_difficulty == 3:
 				print("Not implemented yet")
 				return
