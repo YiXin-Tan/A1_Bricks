@@ -206,11 +206,6 @@ def get_winning_player(board) -> int:
 
 	"""
 
-	# Checks if numbers in each row are not 1 or 2 (i.e no winners)
-	# for row in board:
-	# 	for i in range(len(row)-3):
-	# 		if row[i] != 1 or row[i] != 2:
-	# 			return 0
 
 	
 	# Checking for horizontal win
