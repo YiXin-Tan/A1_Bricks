@@ -369,12 +369,22 @@ def cpu_player_easy(board, player):
 	:param player: The player whose turn it is, integer value of 1 or 2.
 	:return: Column that the piece was dropped into, int.
 	"""
+
+	
+	# Initially cpu has not dropped a piece
 	cpu_has_dropped = False
+	# While cpu has not dropped
 	while not cpu_has_dropped:
+		# Choose a random column 
 		ran_int = random.randint(1, 7)
+		# Drop cpu piece into that column
 		cpu_has_dropped = drop_piece(board, player, ran_int)	
+		# if drop_piece() returned True then return ran_int otherwise keep looping
 		if cpu_has_dropped:
 			return ran_int
+
+
+
 
 def clone_board(board):
 	"""
@@ -387,9 +397,11 @@ def clone_board(board):
 	cloned_board = create_board()
 	# for each item in the param board, copy over to cloned board
 
+	# for each row
 	for i in range(len(board)):
 	# for each value in each row
 		for j in range(len(board[0])):
+			# cloning the values in each slot in real board to cloned board (mimicking the real board to check wins)
 			cloned_board[i][j] = board[i][j]
 	return cloned_board
 
@@ -421,33 +433,46 @@ def cpu_player_medium(board, player):
 	# drop the piece into the cloned board
 	# if this wins the game, drop the piece into the real board and return the column
 
+
+	# Check immediate win
 	for j in range(len(board[0])):
 		# print(j)
+
+		# pass the clone_board function in so we can use it, assigned to variable so it can be used (local variable)
 		cloned_board = clone_board(board)
+
+		# dummy drop into cloned board
 		cpu_drop = drop_piece(cloned_board, player, j)
+
+		# cpu_drop returns Boolean values so we checking if the drop was successful
 		if cpu_drop:
+			# check if there is a win on that drop, if there is then drop the piece into the real board
 			if get_winning_player(cloned_board) == player:
 				drop_piece(board, player, j)
 				return j
 
 	# check opponent block
 	for j in range(len(board[0])):
+
+		# pass the clone_board function in so we can use it, assigned to variable so it can be used (local variable)
 		cloned_board = clone_board(board)
+
+		# assign opponent to 2 if player already 1 otherwise assign to 
+		# assume that opponent is the human player
 		opponent = 2 if player == 1 else 1
+
+		# check if human player will win with dummy drop
 		player_win = drop_piece(cloned_board, opponent, j)
+
 		if player_win:
+
+			# check if dummy win does occur
 			if get_winning_player(cloned_board) == opponent:
+				# cpu will drop piece into real board to block human player from winning 
+				# if human has multiple ways to win, cpu will drop into first column that it sees a win (as iterating through columns 1-7, starting at 1)
 				drop_piece(board, player, j)
 				return j
 
-	# for i in range(len(board)):
-	# 	for j in range(len(board[0])):
-	# 		if board[i][j] == 0:
-	# 			board[i][j] = player_piece
-	# 			if get_winning_player == player_piece:
-	# 				board[i][j] = cpu_piece
-	# 				return cpu_piece
-	
 	return cpu_player_easy(board, player)
 
 
