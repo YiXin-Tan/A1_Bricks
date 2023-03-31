@@ -71,12 +71,22 @@ def create_board():
 
     :return: A 2D list of 6x7 dimensions.
     """
+    
+    # Assign variable 'row_num' to integer value of 6 (for 6 rows)
     row_num = 6
+    # Assign variable of 'col_num' to integer value of 7
     col_num = 7
+
+    # This will be the list for the board
     new_board = []
 
-    for row_index in range(row_num):  # iterates for row_num (6) times to create row_num (6) rows
-        row = [0] * col_num  # each row contains col_num (7) slots
+    # Iterates through range of row_num which is 6 (0-5)
+    for row_index in range(row_num):
+        
+        # Assigning row to a list of 7 slots of 0s 
+        row = [0] * col_num 
+        
+        # Append row to new_board 6 times 
         new_board.append(row)
     return new_board
 
@@ -146,9 +156,11 @@ def print_board(board):
         # adds a | for every row (left most box only: column 0)
         board_string += "\n|"
 
-        # Iterate through numbers in the row - 3 options (0, 1, 2)
+        # Iterate through numbers in the row: 3 options (0, 1, 2)
         for num in row:
             # print(num)
+
+
             # Assign display character to the function: get_display_char(num) 
             # Parameter of get_display_char(): num
             display_char = get_display_char(num)
@@ -161,15 +173,20 @@ def print_board(board):
 
         # Add horizontal line for each row
         board_string += ("\n" + horizontal_line)
+    # Add footer
     board_string += ("\n" + footer)
+    # Prints the board_string at their positions
     print(board_string)
 
 def get_display_char(num):
     """
     Gets display character for a number on the board
     """
+    
+    # If the num in a slot equals 0 return an empty string
     if num == 0:
         return " "
+    # Return "X" if a slot in in the board equals 1 otherwise return "0"
     return "X" if num == 1 else "O"
 
 def drop_piece(board, player, column):
@@ -193,6 +210,27 @@ def drop_piece(board, player, column):
         row_index_to_check -= 1
     return False
 
+# def drop_piece(board, player, column: int):
+	
+# 	#Players will choose columns 1-7 however they are 0-6 in program
+# 	check_column = column - 1
+# 	#check row starts at 5 as that is the last row on the board (we are checking from bottom up)
+# 	check_row = 5
+
+
+# 	while check_row >= 0:
+# 		# Assigning the 'slot to check' to the slot at row: 5 column: ((player choice of 1-7) - 1)
+# 		check_slot = board[check_row][check_column]
+# 		if check_slot == 0:
+# 			# Assign the slot to that player if slot is empty (0)
+# 			board[check_row][check_column] = player
+# 			return True
+# 		#decrement check_row
+# 		check_row -= 1
+# 	# Function will return false if column is full (loops 6 times for 6 rows)
+# 	return False
+
+
 
 def execute_player_turn(player, board):
     """
@@ -201,8 +239,11 @@ def execute_player_turn(player, board):
 
     :return: Column that the piece was dropped into, int.
     """
+
+    # Initalise the drop to unsuccessful 
     drop_successful = False
 
+    # While the drop is not successful do this...
     while not drop_successful:
 
         # Column choice is assigned function validate input, prompting the specific player
@@ -230,7 +271,11 @@ def end_of_game(board): # Task 6
 
             
     # player has won
-    player_has_won = get_winning_player(board) # this is either 0, 1 or 2 
+
+    # Assigning the variable player_has_won to the function get_winning_player (invoking the function)
+    player_has_won = get_winning_player(board) # this is either 0, 1 or 2 (0: no winner, 1: Player 1 won, 2: Player 2 won)
+
+    # If player_has_won returned a 1 or 2 return that number (winning player)
     if player_has_won != 0:
         return player_has_won
     
@@ -258,9 +303,9 @@ def board_is_full(board) -> bool:
 
     # Iterate through rows
     for row in board:
-        # Iterate through elements in each row
+        # Iterate through each number in each row
         for num in row:
-            # If any element in the rows equal 0 (empty), then return False (game is not over), otherwise if no element is 0 then return True (game is over: Draw)
+            # If any number in each row is a 0 (empty) return False (game is not over), otherwise if no number is 0 then return True (game is over: Draw)
             if num == 0:
                 return False
     return True
@@ -283,7 +328,7 @@ def get_winning_player(board) -> int:
     for row in board:
 
         # we subtract 3 from the length of the row as we only need to check 4 adjacent slots
-        # looking at a row [0, 0, 0, 0, 0, 0, 0]
+        # For example if we look at a row: [0, 0, 0, 0, 0, 0, 0]
             # if we start at i=0, the first 4 slots will be checked: (0,1,2,3)
             # if we then go to i=1, indexes 1,2,3,4 will be checked
                 # continuing this cycle we want to stop when we cant check 4 slots, (i.e when i= 4, 5, 6) otherwise out of range error will occur
@@ -358,7 +403,8 @@ def local_2_player_game():
 
     :return: None
     """
-    # Implement your solution below
+    
+    # invoking the function create_baord()
     board = create_board()
     
     # initial player is assigned 1
@@ -585,9 +631,8 @@ def cpu_player_hard(board, player):
     Algorithm:
         1. Check for winning move and go there if there is
         2. Check for blocking mvoe and go there if there is
-        3. Check for a connected move and go there if there is
-        4. Place somewhere in the middle
-        5. Place randomly
+        3. Place somewhere in the middle
+        4. Place randomly
 
     :param board: The game board, 2D list of 6x7 dimensions.
     :param player: The player whose turn it is, integer value of 1 or 2.
@@ -630,7 +675,9 @@ def get_cpu_difficulty() -> int:
     :return int: 1 = easy, 2 = medium, 3 = hard
     use validate_input
     """
-    
+
+    # Asking user to choose the cpu difficulty level of easy, medium or hard 
+    # In order to do so we invoke the valid_input() function 
     user_input = int(validate_input(prompt = "Please select a difficulty (1: Easy, 2: Medium, 3; Hard): ", valid_inputs = ["1", "2", "3"]))
     return user_input
 
@@ -668,13 +715,16 @@ def game_against_cpu():
             # Easy difficulty
             if cpu_difficulty == 1:
                 prev_col_choice = cpu_player_easy(board, current_player)
-
+            
+            # Medium difficulty
             if cpu_difficulty == 2:
                 prev_col_choice = cpu_player_medium(board, current_player)
 
+            # Hard difficulty
             if cpu_difficulty == 3:
                 prev_col_choice = cpu_player_hard(board, current_player)
-        
+
+        # invokes end_of_game() function to check if there is a winner or not, and if there is a winner who is it  
         check_winner = end_of_game(board)
         if check_winner == 1:
             clear_screen()
