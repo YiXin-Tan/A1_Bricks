@@ -4,7 +4,6 @@ FIT1045: Sem 1 2023 Assignment 1
 import random
 import os
 
-#hello
 def clear_screen():
     """
     Clears the terminal for Windows and Linux/MacOS.
@@ -141,200 +140,200 @@ def execute_player_turn(player, board):
 
 
 def end_of_game(board): # Task 6
-	"""
-	Checks if the game has ended with a winner
-	or a draw.
+    """
+    Checks if the game has ended with a winner
+    or a draw.
 
-	:param board: The game board, 2D list of 6 rows x 7 columns.
-	:return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, 3 if draw.
-	"""
+    :param board: The game board, 2D list of 6 rows x 7 columns.
+    :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, 3 if draw.
+    """
 
-			
-	# player has won
-	player_has_won = get_winning_player(board) # this is either 0, 1 or 2
-	if player_has_won != 0:
-		return player_has_won
-	
-	# board is full
-	if board_is_full(board):
-		return 3
+            
+    # player has won
+    player_has_won = get_winning_player(board) # this is either 0, 1 or 2
+    if player_has_won != 0:
+        return player_has_won
+    
+    # board is full
+    if board_is_full(board):
+        return 3
 
-	# game is not over
-	return 0
+    # game is not over
+    return 0
 
 
 def board_is_full(board) -> bool:
-	"""
-	Checks if the board is full
+    """
+    Checks if the board is full
 
-	:param board: The game board, 2D list of 6 rows x 7 columns.
-	:return: true if full else false
-	"""
-	
-	"""
-	check every number slot in board
-	if any slot has a 0 then return false
-	if no slot is 0 return True
-	"""
+    :param board: The game board, 2D list of 6 rows x 7 columns.
+    :return: true if full else false
+    """
+    
+    """
+    check every number slot in board
+    if any slot has a 0 then return false
+    if no slot is 0 return True
+    """
 
-	for row in board:
-		for num in row:
-			if num == 0:
-				return False
-	return True
-		
+    for row in board:
+        for num in row:
+            if num == 0:
+                return False
+    return True
+        
 
 def get_winning_player(board) -> int:
-	"""
-	Checks if there is a winning player
+    """
+    Checks if there is a winning player
 
-	:param board: The game board, 2D list of 6 rows x 7 columns.
-	:return: 0 if no winner, 1 if player 1 wins, 2 if player 2 wins
-	"""
-	# i = 0 
-	# j = 0
-	# element = board[i][j]
+    :param board: The game board, 2D list of 6 rows x 7 columns.
+    :return: 0 if no winner, 1 if player 1 wins, 2 if player 2 wins
+    """
+    # i = 0 
+    # j = 0
+    # element = board[i][j]
 
-	"""
-	check horizontal:
-	1. Go through each row in board
-	2. For each row:
-		a) check if any 4 adjacent slots are equal to each other 
-			i) if they are equal: 
-				return 1 if slots have 1s in them
-				return 2 if slots have 2s in them
+    """
+    check horizontal:
+    1. Go through each row in board
+    2. For each row:
+        a) check if any 4 adjacent slots are equal to each other 
+            i) if they are equal: 
+                return 1 if slots have 1s in them
+                return 2 if slots have 2s in them
 
-	"""
+    """
 
 
-	
-	# Checking for horizontal win
-	for row in board:
-		# we subtract 3 from the length of the row as we only need to check 4 adjacent slots
-		# looking at a row [0, 0, 0, 0, 0, 0, 0]
-			# if we start at i=0, the first 4 slots will be checked (0,1,2,3)
-			# if we then go to i=1, indexes 1,2,3,4 will be checked
-				# continuing this cycle we want to stop when we cant check 4 slots, (i.e when i= 4, 5, 6) otherwise out of range error will occur
-		for i in range(len(row)-3):
-			if row[i] == row[i+1] == row[i+2] == row[i+3] == 1:
-				return 1
-			elif row[i] == row[i+1] == row[i+2] == row[i+3] == 2:
-				return 2
-	
-	
-	
+    
+    # Checking for horizontal win
+    for row in board:
+        # we subtract 3 from the length of the row as we only need to check 4 adjacent slots
+        # looking at a row [0, 0, 0, 0, 0, 0, 0]
+            # if we start at i=0, the first 4 slots will be checked (0,1,2,3)
+            # if we then go to i=1, indexes 1,2,3,4 will be checked
+                # continuing this cycle we want to stop when we cant check 4 slots, (i.e when i= 4, 5, 6) otherwise out of range error will occur
+        for i in range(len(row)-3):
+            if row[i] == row[i+1] == row[i+2] == row[i+3] == 1:
+                return 1
+            elif row[i] == row[i+1] == row[i+2] == row[i+3] == 2:
+                return 2
+    
+    
+    
 
-	# Checking for vertical win 
-	# this will be the range of the first row, as board[0] is row 1
-	# so we are iterating through the range of 7 (0 to 6)
-	for i in range(len(board[0])):
+    # Checking for vertical win 
+    # this will be the range of the first row, as board[0] is row 1
+    # so we are iterating through the range of 7 (0 to 6)
+    for i in range(len(board[0])):
 
-		# Remember that length of board is the number of rows in the board. (board is a list of lists)
-		# subtract 3 is same reason for testing horizontally 
-		for j in range(len(board)-3):
-			# print(len(board)): will output 6 for 6 rows
+        # Remember that length of board is the number of rows in the board. (board is a list of lists)
+        # subtract 3 is same reason for testing horizontally 
+        for j in range(len(board)-3):
+            # print(len(board)): will output 6 for 6 rows
 
-			# index 'j' increments for each test as we are moving down 1 row for every j+1 (testing vertically)
-			if board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 1:
-				return 1
-			elif board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 2:
-				return 2
+            # index 'j' increments for each test as we are moving down 1 row for every j+1 (testing vertically)
+            if board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 1:
+                return 1
+            elif board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 2:
+                return 2
 
-	
+    
 
-	# Checking diagonal wins
-	# subtract 3 from length of board as only need to iterate to 3rd row
-		# at rows 4-6, and go diagonally down to the right there are only 3, 2, and 1 blocks adjacent (so cannot be any wins here)
-	for i in range(len(board)-3):
-		
-		# 7 elements in each row. last element where there can be a win diagonally to the right is at board[0][3], i.e element 4
-			# from elements 5-7, check diagonally down to the right, there are only 3, 2 and 1 blocks respectively adjacent
-		for j in range(len(board[0])-3):
+    # Checking diagonal wins
+    # subtract 3 from length of board as only need to iterate to 3rd row
+        # at rows 4-6, and go diagonally down to the right there are only 3, 2, and 1 blocks adjacent (so cannot be any wins here)
+    for i in range(len(board)-3):
+        
+        # 7 elements in each row. last element where there can be a win diagonally to the right is at board[0][3], i.e element 4
+            # from elements 5-7, check diagonally down to the right, there are only 3, 2 and 1 blocks respectively adjacent
+        for j in range(len(board[0])-3):
 
-			"""
-			these 'for loops' have created a rectangle: 4 to the right and 3 down in the board starting at [0][0] (as a range for where diagonals can be checked from)
-			- the same will be done for checking diagonals right to left
-			"""
-			
+            """
+            these 'for loops' have created a rectangle: 4 to the right and 3 down in the board starting at [0][0] (as a range for where diagonals can be checked from)
+            - the same will be done for checking diagonals right to left
+            """
+            
 
-			# right to left diagonal win
+            # right to left diagonal win
 
-			if board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 1:
-				return 1
-			elif board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 2:
-				return 2
+            if board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 1:
+                return 1
+            elif board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 2:
+                return 2
 
-			
-			# left to right diagonal win
-			# -j as we want to start from right side (i.e board[0][6])
-				# if j = 0, then -j = -0
-				# if j = 1, then -j = -1
-				# so on
-			# i remains the same as adding 1 to the index will still go down a row
-			
-			if board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 1:
-				return 1
-			elif board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 2:
-				return 2
-				
-		# Return 0 (no winner yet): this is outside each 'for loop' (let loops iterate first, if no winner found then only return 0)
-	return 0
+            
+            # left to right diagonal win
+            # -j as we want to start from right side (i.e board[0][6])
+                # if j = 0, then -j = -0
+                # if j = 1, then -j = -1
+                # so on
+            # i remains the same as adding 1 to the index will still go down a row
+            
+            if board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 1:
+                return 1
+            elif board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 2:
+                return 2
+                
+        # Return 0 (no winner yet): this is outside each 'for loop' (let loops iterate first, if no winner found then only return 0)
+    return 0
 
 def local_2_player_game():
-	"""
-	Runs a local 2 player game of Connect 4.
+    """
+    Runs a local 2 player game of Connect 4.
 
-	:return: None
-	"""
-	# Implement your solution below
-	board = create_board()
-	
+    :return: None
+    """
+    # Implement your solution below
+    board = create_board()
+    
     # initial player is assigned 1
-	current_player = 1 
-	# There is no previous column choice to tell players
-	prev_col_choice = None
+    current_player = 1 
+    # There is no previous column choice to tell players
+    prev_col_choice = None
 
-	while True:
-		clear_screen()
-		# execute the turn
-		print_board(board)
+    while True:
+        clear_screen()
+        # execute the turn
+        print_board(board)
 
-		# if there was a previous move (turn 1 has no previous move), then print that out
-		if prev_col_choice:
-			# '2 if current_player==1 else 1' only switches player inside print function
-			print(f'Player {2 if current_player==1 else 1} has dropped in {prev_col_choice}')
+        # if there was a previous move (turn 1 has no previous move), then print that out
+        if prev_col_choice:
+            # '2 if current_player==1 else 1' only switches player inside print function
+            print(f'Player {2 if current_player==1 else 1} has dropped in {prev_col_choice}')
 
-		prev_col_choice = execute_player_turn(current_player, board)
-		
-		check_winner = end_of_game(board)
-		if check_winner == 1:
-			clear_screen()
-			print_board(board)
-			print("Player 1 wins")
-			break
-		elif check_winner == 2:
-			clear_screen()
-			print_board(board)
-			print("Player 2 wins")
-			break
-		elif check_winner == 3:
-			clear_screen()
-			print_board(board)
-			print("Draw")
-			break
+        prev_col_choice = execute_player_turn(current_player, board)
+        
+        check_winner = end_of_game(board)
+        if check_winner == 1:
+            clear_screen()
+            print_board(board)
+            print("Player 1 wins")
+            break
+        elif check_winner == 2:
+            clear_screen()
+            print_board(board)
+            print("Player 2 wins")
+            break
+        elif check_winner == 3:
+            clear_screen()
+            print_board(board)
+            print("Draw")
+            break
 
-		# change the Player
-		current_player = 2 if current_player == 1 else 1
+        # change the Player
+        current_player = 2 if current_player == 1 else 1
 
 
 def main():
-	"""
-	Defines the main application loop.
+    """
+    Defines the main application loop.
     User chooses a type of game to play or to exit.
 
-	:return: None
-	"""
-	menu_string = """=============== Main Menu ===============
+    :return: None
+    """
+    menu_string = """=============== Main Menu ===============
 Welcome to Connect 4!
 1. View Rules
 2. Play a local 2 player game
@@ -342,229 +341,260 @@ Welcome to Connect 4!
 4. Exit
 =========================================
 Enter a number: """
-	clear_screen()
-	while True:
-		user_input = validate_input(
-			prompt=menu_string,
-			valid_inputs=["1", "2", "3", "4"]
-		)
-		if user_input == "1":
-			clear_screen()
-			print_rules()
-		if user_input == "2":
-			return local_2_player_game()
-		if user_input == "3":
-			return game_against_cpu()
-		if user_input == "4":
-			print("You have exited the game")
-			return
+    clear_screen()
+    while True:
+        user_input = validate_input(
+            prompt=menu_string,
+            valid_inputs=["1", "2", "3", "4"]
+        )
+        if user_input == "1":
+            clear_screen()
+            print_rules()
+        if user_input == "2":
+            return local_2_player_game()
+        if user_input == "3":
+            return game_against_cpu()
+        if user_input == "4":
+            print("You have exited the game")
+            return
 
 
 def cpu_player_easy(board, player):
-	"""
-	Executes a move for the CPU on easy difficulty. This function 
-	plays a randomly selected column.
-
-	:param board: The game board, 2D list of 6x7 dimensions.
-	:param player: The player whose turn it is, integer value of 1 or 2.
-	:return: Column that the piece was dropped into, int.
-	"""
-
-	
-	# Initially cpu has not dropped a piece
-	cpu_has_dropped = False
-	# While cpu has not dropped
-	while not cpu_has_dropped:
-		# Choose a random column 
-		ran_int = random.randint(1, 7)
-		# Drop cpu piece into that column
-		cpu_has_dropped = drop_piece(board, player, ran_int)	
-		# if drop_piece() returned True then return ran_int otherwise keep looping
-		if cpu_has_dropped:
-			return ran_int
-
-
-
-
-def clone_board(board):
-	"""
-	Creates a deep clone of the param board
-
-	:param board: the board
-	:return: cloned board
-	"""
-	# create board of same number of rows and height
-	cloned_board = create_board()
-	# for each item in the param board, copy over to cloned board
-
-	# for each row
-	for i in range(len(board)):
-	# for each value in each row
-		for j in range(len(board[0])):
-			# cloning the values in each slot in real board to cloned board (mimicking the real board to check wins)
-			cloned_board[i][j] = board[i][j]
-	return cloned_board
-
-
-	# return the cloned board 
-	
-def cpu_player_medium(board, player):
-	"""
-	Executes a move for the CPU on medium difficulty.
-	It first checks for an immediate win and plays that move if possible. 
-	If no immediate win is possible, it checks for an immediate win 
-	for the opponent and blocks that move. If neither of these are 
-	possible, it plays a random move.
-
-	:param board: The game board, 2D list of 6x7 dimensions.
-	:param player: The player whose turn it is, integer value of 1 or 2.
-	:return: Column that the piece was dropped into, int.
-	"""
-	
-	"""
-	1. Play a move that results in immediate win
-	2. Check if oppenent can score immediate win
-		block this 
-	3. if none then play random drop
-	"""
-	
-	# for each col
-	# clone the board
-	# drop the piece into the cloned board
-	# if this wins the game, drop the piece into the real board and return the column
-
-
-	# Check immediate win
-	for j in range(len(board[0])):
-		# print(j)
-
-		# pass the clone_board function in so we can use it, assigned to variable so it can be used (local variable)
-		cloned_board = clone_board(board)
-
-		# dummy drop into cloned board
-		cpu_drop = drop_piece(cloned_board, player, j)
-
-		# cpu_drop returns Boolean values so we checking if the drop was successful
-		if cpu_drop:
-			# check if there is a win on that drop, if there is then drop the piece into the real board
-			if get_winning_player(cloned_board) == player:
-				drop_piece(board, player, j)
-				return j
-
-	# check opponent block
-	for j in range(len(board[0])):
-
-		# pass the clone_board function in so we can use it, assigned to variable so it can be used (local variable)
-		cloned_board = clone_board(board)
-
-		# assign opponent to 2 if player already 1 otherwise assign to 
-		# assume that opponent is the human player
-		opponent = 2 if player == 1 else 1
-
-		# check if human player will win with dummy drop
-		player_win = drop_piece(cloned_board, opponent, j)
-
-		if player_win:
-
-			# check if dummy win does occur
-			if get_winning_player(cloned_board) == opponent:
-				# cpu will drop piece into real board to block human player from winning 
-				# if human has multiple ways to win, cpu will drop into first column that it sees a win (as iterating through columns 1-7, starting at 1)
-				drop_piece(board, player, j)
-				return j
-
-	return cpu_player_easy(board, player)
-
-
-
-
-def cpu_player_hard(board, player):
     """
-    Executes a move for the CPU on hard difficulty.
-    This function creates a copy of the board to simulate moves.
-    <Insert player strategy here>
+    Executes a move for the CPU on easy difficulty. This function 
+    plays a randomly selected column.
 
     :param board: The game board, 2D list of 6x7 dimensions.
     :param player: The player whose turn it is, integer value of 1 or 2.
     :return: Column that the piece was dropped into, int.
     """
-    # Implement your solution below
-    raise NotImplementedError
+
+    
+    # Initially cpu has not dropped a piece
+    cpu_has_dropped = False
+    # While cpu has not dropped
+    while not cpu_has_dropped:
+        # Choose a random column 
+        ran_int = random.randint(1, 7)
+        # Drop cpu piece into that column
+        cpu_has_dropped = drop_piece(board, player, ran_int)	
+        # if drop_piece() returned True then return ran_int otherwise keep looping
+        if cpu_has_dropped:
+            return ran_int
+
+
+
+
+def clone_board(board):
+    """
+    Creates a deep clone of the param board
+
+    :param board: the board
+    :return: cloned board
+    """
+    # create board of same number of rows and height
+    cloned_board = create_board()
+    # for each item in the param board, copy over to cloned board
+
+    # for each row
+    for i in range(len(board)):
+    # for each value in each row
+        for j in range(len(board[0])):
+            # cloning the values in each slot in real board to cloned board (mimicking the real board to check wins)
+            cloned_board[i][j] = board[i][j]
+    return cloned_board
+
+
+    # return the cloned board 
+
+def get_winning_place(board, player):
+    """
+    TODO: documentation
+    
+    
+    
+    
+    """
+    # for each col
+    # clone the board
+    # drop the piece into the cloned board
+    # if this wins the game, drop the piece into the real board and return the column
+
+    for j in range(len(board[0])):
+        # print(j)
+        cloned_board = clone_board(board)
+        cpu_drop = drop_piece(cloned_board, player, j)
+        if cpu_drop:
+            if get_winning_player(cloned_board) == player:
+                drop_piece(board, player, j)
+                return j
+    return None
+
+def get_blocking_place(board, player):
+    """
+    TODO: documentation
+    
+    
+    
+    
+    """
+    # check opponent block
+    for j in range(len(board[0])):
+        cloned_board = clone_board(board)
+        opponent = 2 if player == 1 else 1
+        player_win = drop_piece(cloned_board, opponent, j)
+        if player_win:
+            if get_winning_player(cloned_board) == opponent:
+                drop_piece(board, player, j)
+                return j
+    return None
+
+def cpu_player_medium(board, player):
+    """
+    Executes a move for the CPU on medium difficulty.
+    It first checks for an immediate win and plays that move if possible. 
+    If no immediate win is possible, it checks for an immediate win 
+    for the opponent and blocks that move. If neither of these are 
+    possible, it plays a random move.
+
+    :param board: The game board, 2D list of 6x7 dimensions.
+    :param player: The player whose turn it is, integer value of 1 or 2.
+    :return: Column that the piece was dropped into, int.
+    """
+    
+    """
+    1. Play a move that results in immediate win
+    2. Check if oppenent can score immediate win
+        block this 
+    3. if none then play random drop
+    """
+
+    # check for a winning piece
+    winning_place = get_winning_place(board, player)
+    if winning_place:
+        return winning_place
+
+    # check for blocking
+    blocking_place = get_blocking_place(board, player)
+    if blocking_place:
+        return blocking_place
+
+    return cpu_player_easy(board, player)
+
+def cpu_player_hard(board, player):
+    """
+    Executes a move for the CPU on hard difficulty.
+    This function creates a copy of the board to simulate moves.
+
+    Algorithm:
+        1. Check for winning move and go there if there is
+        2. Check for blocking mvoe and go there if there is
+        3. Check for a connected move and go there if there is
+        4. Place somewhere in the middle
+        5. Place randomly
+
+    :param board: The game board, 2D list of 6x7 dimensions.
+    :param player: The player whose turn it is, integer value of 1 or 2.
+    :return: Column that the piece was dropped into, int.
+    """
+    # check for a winning piece
+    winning_place = get_winning_place(board, player)
+    if winning_place:
+        return winning_place
+
+    # check for blocking
+    blocking_place = get_blocking_place(board, player)
+    if blocking_place:
+        return blocking_place
+    
+    # otherwise return random in middle
+    for i in range(len(board)//2+1):
+        # +1
+        col = len(board)//2+i
+        if drop_piece(board, player, col):
+            return col
+
+        # -1
+        col = len(board)//2-i
+        if drop_piece(board, player, col):
+            return col
+        
+    # place randomly
+    return cpu_player_easy(board, player)
 
 
 def get_cpu_difficulty() -> int:
-	"""
-	Gets the difficulty of the CPU
-	Asks the user what difficulty they would like to play against
+    """
+    Gets the difficulty of the CPU
+    Asks the user what difficulty they would like to play against
 
-	:return int: 1 = easy, 2 = medium, 3 = hard
-	use validate_input
-	"""
-	
-	user_input = int(validate_input(prompt = "Please select a difficulty (1: Easy, 2: Medium, 3; Hard): ", valid_inputs = ["1", "2", "3"]))
-	return user_input
+    :return int: 1 = easy, 2 = medium, 3 = hard
+    use validate_input
+    """
+    
+    user_input = int(validate_input(prompt = "Please select a difficulty (1: Easy, 2: Medium, 3; Hard): ", valid_inputs = ["1", "2", "3"]))
+    return user_input
 
 def game_against_cpu():
-	"""
-	Runs a game of Connect 4 against the computer.
+    """
+    Runs a game of Connect 4 against the computer.
 
-	:return: None
-	"""
-	board = create_board()
-	
+    :return: None
+    """
+    board = create_board()
+    
     # initial player is assigned 1
-	current_player = 1 
-	# There is no previous column choice to tell players
-	prev_col_choice = None
+    current_player = 1 
+    # There is no previous column choice to tell players
+    prev_col_choice = None
 
-	# get cpu difficulty (1 = easy, 2 = med, 3 = hard)
-	cpu_difficulty: int = get_cpu_difficulty()
+    # get cpu difficulty (1 = easy, 2 = med, 3 = hard)
+    cpu_difficulty: int = get_cpu_difficulty()
 
-	while True:
-		clear_screen()
-		# execute the turn
-		print_board(board)
+    while True:
+        clear_screen()
+        # execute the turn
+        print_board(board)
 
-		# if there was a previous move (turn 1 has no previous move), then print that out
-		if prev_col_choice:
-			# '2 if current_player==1 else 1' will only switch player inside print function as current_player switched at bottom of function
-			print(f'Player {2 if current_player== 1 else 1} has dropped in {prev_col_choice}')
+        # if there was a previous move (turn 1 has no previous move), then print that out
+        if prev_col_choice:
+            # '2 if current_player==1 else 1' will only switch player inside print function as current_player switched at bottom of function
+            print(f'Player {2 if current_player== 1 else 1} has dropped in {prev_col_choice}')
 
-		if current_player == 1:
-			prev_col_choice = execute_player_turn(current_player, board)
-		elif current_player == 2:
-			# this is the cpu turn
+        if current_player == 1:
+            prev_col_choice = execute_player_turn(current_player, board)
+        elif current_player == 2:
+            # this is the cpu turn
 
-			# Easy difficulty
-			if cpu_difficulty == 1:
-				prev_col_choice = cpu_player_easy(board, current_player)
+            # Easy difficulty
+            if cpu_difficulty == 1:
+                prev_col_choice = cpu_player_easy(board, current_player)
 
-			if cpu_difficulty == 2:
-				prev_col_choice = cpu_player_medium(board, current_player)
+            if cpu_difficulty == 2:
+                prev_col_choice = cpu_player_medium(board, current_player)
 
-			if cpu_difficulty == 3:
-				print("Not implemented yet")
-				return
-		
-		check_winner = end_of_game(board)
-		if check_winner == 1:
-			clear_screen()
-			print_board(board)
-			print("Player 1 wins")
-			break
-		elif check_winner == 2:
-			clear_screen()
-			print_board(board)
-			print("Player 2 wins")
-			break
-		elif check_winner == 3:
-			clear_screen()
-			print_board(board)
-			print("Draw")
-			break
+            if cpu_difficulty == 3:
+                prev_col_choice = cpu_player_hard(board, current_player)
+        
+        check_winner = end_of_game(board)
+        if check_winner == 1:
+            clear_screen()
+            print_board(board)
+            print("Player 1 wins")
+            break
+        elif check_winner == 2:
+            clear_screen()
+            print_board(board)
+            print("Player 2 wins")
+            break
+        elif check_winner == 3:
+            clear_screen()
+            print_board(board)
+            print("Draw")
+            break
 
-		# change the Player
-		current_player = 2 if current_player == 1 else 1
+        # change the Player
+        current_player = 2 if current_player == 1 else 1
 
 
 if __name__ == "__main__":
