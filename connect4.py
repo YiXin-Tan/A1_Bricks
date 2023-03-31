@@ -31,24 +31,38 @@ def print_rules():
     print("=========================================")
 
 
+# def validate_input(prompt, valid_inputs):
+#     """
+#     Repeatedly ask user for input until they enter an input
+#     within a set valid of options.
+
+#     :param prompt: The prompt to display to the user, string.
+#     :param valid_inputs: The range of values to accept, list
+#     :return: The user's input, string.
+#     """
+#     valid_input = False
+#     while not valid_input:
+#         option = input(prompt)
+#         if option in valid_inputs:
+#             valid_input = True
+#             return option
+#         else:
+#             print('Invalid input, please try again.')
+
 def validate_input(prompt, valid_inputs):
-    """
-    Repeatedly ask user for input until they enter an input
-    within a set valid of options.
+	#prompt: string "Please select an option (a,b,c):"
+	#valid: list of strings
 
-    :param prompt: The prompt to display to the user, string.
-    :param valid_inputs: The range of values to accept, list
-    :return: The user's input, string.
-    """
-    valid_input = False
-    while not valid_input:
-        option = input(prompt)
-        if option in valid_inputs:
-            valid_input = True
-            return option
-        else:
-            print('Invalid input, please try again.')
-
+	# user_input is assigned to an input with the prompt string inside it
+	user_input = input(prompt) 
+	# while whatever the user inputs is not in the list do the following
+	while user_input not in valid_inputs:
+	# print this string
+		print("Invalid input, please try again.")
+	# re ask for input from the user
+		user_input = input(prompt)
+	# return the user_input
+	return user_input
 
 def create_board():
     """
@@ -67,36 +81,96 @@ def create_board():
     return new_board
 
 
-def print_board(board):
-    """
-    Prints the game board to the console.
+# def create_board():
 
-    :param board: The game board, 2D list of 6x7 dimensions.
-    :return: None
-    """
-    board_str = ""  # initialize board (type str) to be returned
+# 	#list for columns with length of 7
+# 	column = [0, 0, 0, 0, 0, 0, 0]
+# 	#list for rows
+# 	row = []
+
+
+# # for the index's of range 6 do something
+# 	for i in range(6):
+# # append the column list to row 6 times
+# # the list() clones the 'column' list however many times is specified in the range() function making each list uniqe 	Otherwise the lists in 'row' will all be read as 'column'
+# 		# if you updated the list column, every list would be updated not just one - think of a matrix/matrice
+# 		row.append(list(column))
+# 	return row
+
+
+# def print_board(board):
+#     """
+#     Prints the game board to the console.
+
+#     :param board: The game board, 2D list of 6x7 dimensions.
+#     :return: None
+#     """
+#     board_str = ""  # initialize board (type str) to be returned
+#     header = "========== Connect4 ========="
+#     players = "Player 1: X       Player 2: O"
+#     margin = ""
+#     col_numbers = "  1   2   3   4   5   6   7"
+#     border_horizontal = " --- --- --- --- --- --- ---"
+#     board_str += "\n".join([header, players, margin, col_numbers, border_horizontal])  # each element will have it's own line
+
+#     for row in board:  # iterate through 6 rows in the board
+#         board_str += "\n|"
+#         for slot in row: # iterate through 7 slots in a row
+#             if slot == 0:  # checks if the slot is empty
+#                 display_token = " "
+#             elif slot == 1:  # display "X" if player1's token exist in the slot
+#                 display_token = "X"
+#             elif slot == 2:  # display "O" if player2's token exist in the slot
+#                 display_token = "O"
+#             board_str += f" {display_token} |"
+#         board_str += ("\n" + border_horizontal)
+#     footer = "============================="
+#     board_str += ("\n" + footer)
+#     print(board_str)
+
+def print_board(board):
+    # Assigning variables
+    board_string = ""
     header = "========== Connect4 ========="
     players = "Player 1: X       Player 2: O"
-    margin = ""
-    col_numbers = "  1   2   3   4   5   6   7"
-    border_horizontal = " --- --- --- --- --- --- ---"
-    board_str += "\n".join([header, players, margin, col_numbers, border_horizontal])  # each element will have it's own line
-
-    for row in board:  # iterate through 6 rows in the board
-        board_str += "\n|"
-        for slot in row: # iterate through 7 slots in a row
-            if slot == 0:  # checks if the slot is empty
-                display_token = " "
-            elif slot == 1:  # display "X" if player1's token exist in the slot
-                display_token = "X"
-            elif slot == 2:  # display "O" if player2's token exist in the slot
-                display_token = "O"
-            board_str += f" {display_token} |"
-        board_str += ("\n" + border_horizontal)
+    line_break = ""
+    column_numbers = "  1   2   3   4   5   6   7"
+    horizontal_line = " --- --- --- --- --- --- ---"
     footer = "============================="
-    board_str += ("\n" + footer)
-    print(board_str)
+    # \n = newline
+    board_string = "\n".join([header, players, line_break, column_numbers, horizontal_line]) 
 
+    # iterate through rows in the 2D array
+    for row in board:
+        
+        # adds a | for every row (left most box only: column 0)
+        board_string += "\n|"
+
+        # Iterate through numbers in the row - 3 options (0, 1, 2)
+        for num in row:
+            # print(num)
+            # Assign display character to the function: get_display_char(num) 
+            # Parameter of get_display_char(): num
+            display_char = get_display_char(num)
+
+            # Adds an f string to board_string
+            # f string uses f at the beginning followed by quotation marks plus curly braces with expressions inside 
+            # which are replaced with their assigned values
+            # in this case the characters to be displayed: (" ", O, X)
+            board_string += f" {display_char} |"
+
+        # Add horizontal line for each row
+        board_string += ("\n" + horizontal_line)
+    board_string += ("\n" + footer)
+    print(board_string)
+
+def get_display_char(num):
+    """
+    Gets display character for a number on the board
+    """
+    if num == 0:
+        return " "
+    return "X" if num == 1 else "O"
 
 def drop_piece(board, player, column):
     """
@@ -130,10 +204,16 @@ def execute_player_turn(player, board):
     drop_successful = False
 
     while not drop_successful:
+
+        # Column choice is assigned function validate input, prompting the specific player
         validated_col_option = validate_input(
             f'Player {player}, please enter the column you would like to drop your piece into: ',
             ['1', '2', '3', '4', '5', '6', '7'])
+        
+        # Reassign drop_successful to drop_piece()
         drop_successful = drop_piece(board, player, int(validated_col_option))
+
+        # If the drop is successful then return that column, else print(...)
         if drop_successful:
             return validated_col_option
         print('That column is full, please try again.')
@@ -150,7 +230,7 @@ def end_of_game(board): # Task 6
 
             
     # player has won
-    player_has_won = get_winning_player(board) # this is either 0, 1 or 2
+    player_has_won = get_winning_player(board) # this is either 0, 1 or 2 
     if player_has_won != 0:
         return player_has_won
     
@@ -176,8 +256,11 @@ def board_is_full(board) -> bool:
     if no slot is 0 return True
     """
 
+    # Iterate through rows
     for row in board:
+        # Iterate through elements in each row
         for num in row:
+            # If any element in the rows equal 0 (empty), then return False (game is not over), otherwise if no element is 0 then return True (game is over: Draw)
             if num == 0:
                 return False
     return True
@@ -194,24 +277,14 @@ def get_winning_player(board) -> int:
     # j = 0
     # element = board[i][j]
 
-    """
-    check horizontal:
-    1. Go through each row in board
-    2. For each row:
-        a) check if any 4 adjacent slots are equal to each other 
-            i) if they are equal: 
-                return 1 if slots have 1s in them
-                return 2 if slots have 2s in them
-
-    """
-
 
     
     # Checking for horizontal win
     for row in board:
+
         # we subtract 3 from the length of the row as we only need to check 4 adjacent slots
         # looking at a row [0, 0, 0, 0, 0, 0, 0]
-            # if we start at i=0, the first 4 slots will be checked (0,1,2,3)
+            # if we start at i=0, the first 4 slots will be checked: (0,1,2,3)
             # if we then go to i=1, indexes 1,2,3,4 will be checked
                 # continuing this cycle we want to stop when we cant check 4 slots, (i.e when i= 4, 5, 6) otherwise out of range error will occur
         for i in range(len(row)-3):
@@ -252,7 +325,7 @@ def get_winning_player(board) -> int:
 
             """
             these 'for loops' have created a rectangle: 4 to the right and 3 down in the board starting at [0][0] (as a range for where diagonals can be checked from)
-            - the same will be done for checking diagonals right to left
+            - the same will be done for checking diagonals from right to left
             """
             
 
@@ -276,7 +349,7 @@ def get_winning_player(board) -> int:
             elif board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 2:
                 return 2
                 
-        # Return 0 (no winner yet): this is outside each 'for loop' (let loops iterate first, if no winner found then only return 0)
+    # Return 0 (no winner yet): this is outside each 'for loop' (let loops iterate first, if no winner found then only return 0)
     return 0
 
 def local_2_player_game():
@@ -341,19 +414,26 @@ Welcome to Connect 4!
 4. Exit
 =========================================
 Enter a number: """
+
     clear_screen()
     while True:
+
+        # Ask user for an option (1-4) as stated in the menu string above
         user_input = validate_input(
             prompt=menu_string,
             valid_inputs=["1", "2", "3", "4"]
         )
+        # Print rules
         if user_input == "1":
             clear_screen()
             print_rules()
+        # Plays local game
         if user_input == "2":
             return local_2_player_game()
+        # Plays ai game
         if user_input == "3":
             return game_against_cpu()
+        # Quits game
         if user_input == "4":
             print("You have exited the game")
             return
@@ -409,11 +489,12 @@ def clone_board(board):
 
 def get_winning_place(board, player):
     """
-    TODO: documentation
-    
-    
-    
-    
+    This function checks for an immediate win and plays that move if possible
+    This function will take precedence over get_blocking_piece()
+   
+    :param board: The game board, 2D list of 6x7 dimensions.
+    :param player: The player whose turn it is, integer value of 1 or 2.
+    :return: Column of the winning place or none if there is no winning place
     """
     # for each col
     # clone the board
@@ -428,16 +509,31 @@ def get_winning_place(board, player):
             if get_winning_player(cloned_board) == player:
                 drop_piece(board, player, j)
                 return j
+            
+    # There is no winning place
     return None
 
 def get_blocking_place(board, player):
     """
-    TODO: documentation
+    This function checks if the opponent (human player) is about to win and blocks it
+    If the opponent has multiple ways of winning this function will block the first one it sees    
+
+
+    :param board: The game board, 2D list of 6x7 dimensions.
+    :param player: The player whose turn it is, integer value of 1 or 2.
+    :return: The column of the blocking place or none if there is no win to bloc
     
     
-    
-    
+            
     """
+    
+    # for each col
+    # clone the board
+    # drop the piece into the cloned board
+        # if this piece blocks a win in the clone board
+        # it will then be dropped into the real board in order to block the opponents piece in real time
+    # if there is no win to block then return None and continue playing
+
     # check opponent block
     for j in range(len(board[0])):
         cloned_board = clone_board(board)
@@ -508,13 +604,16 @@ def cpu_player_hard(board, player):
         return blocking_place
     
     # otherwise return random in middle
+    # the index range is (3)
     for i in range(len(board)//2+1):
         # +1
+        # this will try drop into columns 3-6
         col = len(board)//2+i
         if drop_piece(board, player, col):
             return col
 
         # -1
+        # this will try to drop into columns 3-0
         col = len(board)//2-i
         if drop_piece(board, player, col):
             return col
