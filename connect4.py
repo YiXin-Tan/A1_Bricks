@@ -624,17 +624,92 @@ def cpu_player_medium(board, player):
     return cpu_player_easy(board, player)
 
 
+def get_board_score(board):
+    """
+    Evaluates the whole board
+    :param board: 2D board for scoring
+    :return: Score of the whole 2D board
+    """
+    potential_score = 0
+    # scan horizontally
+    windows = []
+    for r in range(ROW_NUM):
+        for c in range(COL_NUM - 3):
+            hor_array = [board[r][c], board[r][c+1], board[r][c+2], board[r][c+3]]
+            windows.append(hor_array)
+
+    for r in range(ROW_NUM - 3):
+        for c in range(COL_NUM):
+            vert_array = [board[r][c], board[r+1][c], board[r+2][c], board[r+3][c]]
+            windows.append(vert_array)
+
+    for r in range(ROW_NUM - 3):
+        for c in range(COL_NUM - 3):
+            diagonal_se_array = [board[r][c], board[r+1][c+1], board[r+2][c+2], board[r+3][c+3]]
+            diagonal_sw_array = [board[r][-c-1], board[r+1][-c-2], board[r+2][-c-3], board[r+3][-c-4]]
+            windows.append(diagonal_se_array)
+            windows.append(diagonal_sw_array)
+
+    for window in windows:
+        potential_score += get_list_score(window)
+    return potential_score
+
+
+def get_list_score(array):
+    """
+    Evaluates score of cloned board
+    CPU player line of 4: +1000
+    CPU player line of 3: +5
+    CPU player line of 2: +2
+
+    Human player line of 4: -100
+    Human player line of 3: -5
+    Human player line of 2: -2
+
+    :param array: 1D list of 4 elements.
+    :return: Score of the 1D list
+
+    """
+    score = 0
+    cpu_token_count = array.count(CPU_PLAYER_TOKEN)
+    human_token_count = array.count(HUMAN_PLAYER_TOKEN)
+    empty_slot_count = array.count(0)
+
+    if cpu_token_count == 4: # line of 4
+        score += 1000
+    elif cpu_token_count == 3 and empty_slot_count == 1: #  line of 3
+        score += 5
+    elif cpu_token_count == 2 and empty_slot_count == 2: #  line of 2
+        score += 2
+
+    elif human_token_count == 4:  # line of 4
+        score -= 100
+    elif human_token_count == 3 and empty_slot_count == 1:  # line of 3
+        score -= 5
+    elif human_token_count == 2 and empty_slot_count == 2:  # line of 2
+        score -= 2
+
+    return score
+
+
 def cpu_player_hard(board, player):
     """
     Executes a move for the CPU on hard difficulty.
-    This function creates a copy of the board to simulate moves.
+    This function creates a copy of the board
+    to simulate the CPU's next move and then the player's move (search depth = 2).
 
+    By default, CPU will prioritize:
+    1. winning move,
+    2. blocking move,
+    3. move that links most CPU_PLAYER_TOKEN,
+    4. move that blocks HUMAN_PLAYER_TOKEN, and lastly
+    5. random move
+
+    # TODO: amend documentation
     Algorithm:
-        1. Check for winning move and go there if there is
-        2. Check for blocking move and go there if there is
-        3. Check for best move that will result in potential like of 2/3, then check player's potential next move whether he can win
-        #3. Place somewhere in the middle
-        4. Place in best scoring column
+    1. for each column, drop a CPU token
+    2. for each column, drop a human token
+    3. based of evaluated scores of each board (49 in total), find the best board out of the worst board
 
     :param board: The game board, 2D list of 6x7 dimensions.
     :param player: The player whose turn it is, integer value of 1 or 2.
@@ -685,62 +760,6 @@ def cpu_player_hard(board, player):
 
     return max_score_col
 
-
-
-
-def get_board_score(board):
-    potential_score = 0
-    # scan horizontally
-    windows = []
-    for r in range(ROW_NUM):
-        for c in range(COL_NUM - 3):
-            hor_array = [board[r][c], board[r][c+1], board[r][c+2], board[r][c+3]]
-            windows.append(hor_array)
-
-    for r in range(ROW_NUM - 3):
-        for c in range(COL_NUM):
-            vert_array = [board[r][c], board[r+1][c], board[r+2][c], board[r+3][c]]
-            windows.append(vert_array)
-
-    for r in range(ROW_NUM - 3):
-        for c in range(COL_NUM - 3):
-            diagonal_se_array = [board[r][c], board[r+1][c+1], board[r+2][c+2], board[r+3][c+3]]
-            diagonal_sw_array = [board[r][-c-1], board[r+1][-c-2], board[r+2][-c-3], board[r+3][-c-4]]
-            windows.append(diagonal_se_array)
-            windows.append(diagonal_sw_array)
-
-    for window in windows:
-        potential_score += get_slots_score(window)
-    return potential_score
-
-
-def get_slots_score(array):
-    """
-    Evaluates score of cloned board
-    player line of 2: +2
-    player line of 3: +5
-    player line of 4: +1000
-    """
-    score = 0
-    cpu_token_count = array.count(CPU_PLAYER_TOKEN)
-    human_token_count = array.count(HUMAN_PLAYER_TOKEN)
-    empty_slot_count = array.count(0)
-
-    if cpu_token_count == 4: # line of 4
-        score += 1000
-    elif cpu_token_count == 3 and empty_slot_count == 1: #  line of 3
-        score += 5
-    elif cpu_token_count == 2 and empty_slot_count == 2: #  line of 2
-        score += 2
-
-    elif human_token_count == 4:  # line of 4
-        score -= 100
-    elif human_token_count == 3 and empty_slot_count == 1:  # line of 3
-        score -= 5
-    elif human_token_count == 2 and empty_slot_count == 2:  # line of 2
-        score -= 2
-
-    return score
 
 def get_cpu_difficulty() -> int:
     """
