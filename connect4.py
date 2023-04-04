@@ -689,7 +689,6 @@ def get_list_score(array):
 
     return score
 
-
 def cpu_player_hard(board, player):
     """
     Executes a move for the CPU on hard difficulty.
@@ -702,28 +701,19 @@ def cpu_player_hard(board, player):
     3. drop CPU token then drop a Human token to check of human win, if so, don't drop at this column, else
     5. random move
 
-    # TODO: amend documentation
-    Algorithm:
-    1. for each column, drop a CPU token
-    2. for each column, drop a human token
-    3. based of evaluated scores of each board (49 in total), find the best board out of the worst board
-
     :param board: The game board, 2D list of 6x7 dimensions.
     :param player: The player whose turn it is, integer value of 1 or 2.
     :return: Column that the piece was dropped into, int.
     """
-    # assume player = 2
-    opponent = 1
-
     # check for a winning piece
-    # immediate_winning_place = get_winning_place(board, player)
-    # if immediate_winning_place:
-    #     return immediate_winning_place
-    #
-    # # check for blocking move
-    # immediate_blocking_place = get_blocking_place(board, player)
-    # if immediate_blocking_place:
-    #     return immediate_blocking_place
+    immediate_winning_place = get_winning_place(board, CPU_PLAYER_TOKEN)
+    if immediate_winning_place:
+        return immediate_winning_place
+
+    # check for blocking move
+    immediate_blocking_place = get_blocking_place(board, CPU_PLAYER_TOKEN)
+    if immediate_blocking_place:
+        return immediate_blocking_place
 
     cols_to_drop = [c for c in range(1, COL_NUM+1)]
 
@@ -739,9 +729,20 @@ def cpu_player_hard(board, player):
                     # print(f'!!!!nope{c1=}!!!!')
 
     if cols_to_drop:
-        col_to_drop = random.choice(cols_to_drop)
-        drop_piece(board, CPU_PLAYER_TOKEN, col_to_drop)
-        return col_to_drop
+        # otherwise return random in middle
+        # the index range is (3)
+        for i in range(len(cols_to_drop) // 2 + 1):
+            # attempt to drop into middle -> first element of cols_to_drop
+            col_index = len(cols_to_drop) // 2 - i
+            print(col_index)
+            if drop_piece(board, CPU_PLAYER_TOKEN, cols_to_drop[col_index]):
+                return cols_to_drop[col_index]
+
+            # attempt to drop into middle -> last element of cols_to_drop
+            col_index = len(cols_to_drop) // 2 + i
+            if drop_piece(board, CPU_PLAYER_TOKEN, cols_to_drop[col_index]):
+                return cols_to_drop[col_index]
+
     else:
         print('I have no choice but to drop this column... GG if you pick the correct column')
         return cpu_player_easy(board, CPU_PLAYER_TOKEN)
@@ -805,15 +806,6 @@ def game_against_cpu():
     :return: None
     """
     board = create_board()
-
-#     debug_board = [
-#     [0, 0, 0, 0, 0, 0, 0],
-#     [1, 0, 0, 0, 0, 0, 0],
-#     [0, 1, 0, 0, 0, 0, 0],
-#     [0, 0, 1, 0, 0, 0, 0],
-#     [0, 0, 0, 0, 0, 0, 0],
-#     [0, 0, 0, 0, 0, 0, 0]]
-#     board = debug_board
 
     # initial player is assigned 1
     current_player = 1
