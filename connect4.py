@@ -416,7 +416,7 @@ def local_2_player_game():
     while True:
         clear_screen()
         # execute the turn
-        # print_board(board)
+        print_board(board)
 
         # if there was a previous move (turn 1 has no previous move), then print that out
         if prev_col_choice:
@@ -545,14 +545,13 @@ def get_winning_place(board, player):
     # drop the piece into the cloned board
     # if this wins the game, drop the piece into the real board and return the column
 
-    for j in range(len(board[0])):
-        # print(j)
+    for c in range(1, COL_NUM+1):
         cloned_board = clone_board(board)
-        cpu_drop = drop_piece(cloned_board, player, j)
+        cpu_drop = drop_piece(cloned_board, player, c)
         if cpu_drop:
             if get_winning_player(cloned_board) == player:
-                drop_piece(board, player, j)
-                return j
+                drop_piece(board, player, c)
+                return c
 
     # There is no winning place
     return None
@@ -580,14 +579,13 @@ def get_blocking_place(board, player):
     # if there is no win to block then return None and continue playing
 
     # check opponent block
-    for j in range(len(board[0])):
+    for c in range(1, COL_NUM+1):
         cloned_board = clone_board(board)
         opponent = 2 if player == 1 else 1
-        player_win = drop_piece(cloned_board, opponent, j)
-        if player_win:
-            if get_winning_player(cloned_board) == opponent:
-                drop_piece(board, player, j)
-                return j
+        player_win = drop_piece(cloned_board, opponent, c)
+        if player_win and get_winning_player(cloned_board) == opponent:
+            drop_piece(board, player, c)
+            return c
     return None
 
 
@@ -698,11 +696,10 @@ def cpu_player_hard(board, player):
     This function creates a copy of the board
     to simulate the CPU's next move and then the player's move (search depth = 2).
 
-    By default, CPU will prioritize:
-    1. winning move,
-    2. blocking move,
-    3. move that links most CPU_PLAYER_TOKEN,
-    4. move that blocks HUMAN_PLAYER_TOKEN, and lastly
+    CPU will prioritize:
+    1. take immediate winning, else
+    2. block human immediate win, else
+    3. drop CPU token then drop a Human token to check of human win, if so, don't drop at this column, else
     5. random move
 
     # TODO: amend documentation
@@ -718,15 +715,38 @@ def cpu_player_hard(board, player):
     # assume player = 2
     opponent = 1
 
-    # # check for a winning piece
-    # winning_place = get_winning_place(board, player)
-    # if winning_place:
-    #     return winning_place
+    # check for a winning piece
+    # immediate_winning_place = get_winning_place(board, player)
+    # if immediate_winning_place:
+    #     return immediate_winning_place
     #
-    # check for blocking
-    # blocking_place = get_blocking_place(board, player)
-    # if blocking_place:
-    #     return blocking_place
+    # # check for blocking move
+    # immediate_blocking_place = get_blocking_place(board, player)
+    # if immediate_blocking_place:
+    #     return immediate_blocking_place
+
+    cols_to_drop = [c for c in range(1, COL_NUM+1)]
+
+    for c1 in range(1, COL_NUM+1):
+        cloned_board_1 = clone_board(board)
+        if drop_piece(cloned_board_1, CPU_PLAYER_TOKEN, c1):
+            for c2 in range(1, COL_NUM+1):
+                cloned_board_2 = clone_board(cloned_board_1)
+                drop_piece(cloned_board_2, HUMAN_PLAYER_TOKEN, c2)
+                # print_board(cloned_board_2)
+                if get_winning_player(cloned_board_2) == HUMAN_PLAYER_TOKEN:
+                    cols_to_drop.remove(c1)
+                    # print(f'!!!!nope{c1=}!!!!')
+
+    if cols_to_drop:
+        col_to_drop = random.choice(cols_to_drop)
+        drop_piece(board, CPU_PLAYER_TOKEN, col_to_drop)
+        return col_to_drop
+    else:
+        print('I have no choice but to drop this column... GG if you pick the correct column')
+        return cpu_player_easy(board, CPU_PLAYER_TOKEN)
+
+
 
     #
     # for j in range(len(board[0])):
@@ -738,27 +758,28 @@ def cpu_player_hard(board, player):
     #             drop_piece(board, player, j)
     #             return j
 
-    max_score_col = random.randint(0, COL_NUM-1)
-    max_score = 0
-    for c1 in range(COL_NUM):
-        cloned_board1 = clone_board(board)
-        score = 0
-        c2_min = 0
-        if drop_piece(cloned_board1, CPU_PLAYER_TOKEN, c1+1):
-            for c2 in range(COL_NUM):
-                cloned_board2 = clone_board(cloned_board1)
-                if drop_piece(cloned_board2, HUMAN_PLAYER_TOKEN, c2+1):
-                    score = get_board_score(cloned_board2)
-                    # print(f'{print_board(cloned_board2)} {c1=} {score=}')
-                    if score < c2_min:  # get worst board
-                        c2_min = score
-        if score > max_score:
-            max_score_col = c1
-            max_score = score
-
-    drop_piece(board, player, max_score_col)
-
-    return max_score_col
+    # ============
+    # max_score_col = random.randint(0, COL_NUM-1)
+    # max_score = 0
+    # for c1 in range(COL_NUM):
+    #     cloned_board1 = clone_board(board)
+    #     score = 0
+    #     c2_min = 0
+    #     if drop_piece(cloned_board1, CPU_PLAYER_TOKEN, c1+1):
+    #         for c2 in range(COL_NUM):
+    #             cloned_board2 = clone_board(cloned_board1)
+    #             if drop_piece(cloned_board2, HUMAN_PLAYER_TOKEN, c2+1):
+    #                 score = get_board_score(cloned_board2)
+    #                 # print(f'{print_board(cloned_board2)} {c1=} {score=}')
+    #                 if score < c2_min:  # get worst board
+    #                     c2_min = score
+    #     if score > max_score:
+    #         max_score_col = c1
+    #         max_score = score
+    #
+    # drop_piece(board, player, max_score_col)
+    #
+    # return max_score_col
 
 
 def get_cpu_difficulty() -> int:
@@ -784,6 +805,15 @@ def game_against_cpu():
     :return: None
     """
     board = create_board()
+
+#     debug_board = [
+#     [0, 0, 0, 0, 0, 0, 0],
+#     [1, 0, 0, 0, 0, 0, 0],
+#     [0, 1, 0, 0, 0, 0, 0],
+#     [0, 0, 1, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0]]
+#     board = debug_board
 
     # initial player is assigned 1
     current_player = 1
