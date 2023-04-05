@@ -4,6 +4,7 @@ valid_players = []
 valid_token_wins = []
 valid_cpu_num = []
 column_choices= []
+# test
 for i in range(4, 51):
     valid_rows.append(str(i))
     valid_columns.append(str(i))
