@@ -195,10 +195,6 @@ def get_winning_player(board) -> int:
     winning_length = int(token_win)
 
     # check horizontal
-    """
-
-    """
-
     # Iterate through each row in the board
     for row in board:
         # Iterate through range of whatever the row is (gotten by user) - winning length (token_win: user input)
@@ -230,22 +226,7 @@ def get_winning_player(board) -> int:
             if stored_num is not None:
                 return stored_num
 
-
-    """
-    # Checking for horizontal win
-    for row in board:
-        # we subtract 3 from the length of the row as we only need to check 4 adjacent slots
-        # looking at a row [0, 0, 0, 0, 0, 0, 0]
-            # if we start at i=0, the first 4 slots will be checked (0,1,2,3)
-            # if we then go to i=1, indexes 1,2,3,4 will be checked
-                # continuing this cycle we want to stop when we cant check 4 slots, (i.e when i= 4, 5, 6) otherwise out of range error will occur
-        for i in range(len(row)-3):
-            if row[i] == row[i+1] == row[i+2] == row[i+3] == 1:
-                return 1
-            elif row[i] == row[i+1] == row[i+2] == row[i+3] == 2:
-                return 2
-    """
-
+    # Checking vertical win
     for i in range(len(board[0])):
         for j in range(len(board)-winning_length):
             stored_num = None
@@ -270,61 +251,56 @@ def get_winning_player(board) -> int:
                 return stored_num
     
 
-    # Checking for vertical win 
-    # this will be the range of the first row, as board[0] is row 1
-    # so we are iterating through the range of 7 (0 to 6)
-    for i in range(len(board[0])):
+   # Check diagonal left to right
+    for i in range(len(board) - winning_length + 1):
+        for j in range(len(board[0]) - winning_length + 1):
+            stored_num = None
+            for k in range(winning_length):
+                current_num = board[i+k][j+k]
 
-        # Remember that length of board is the number of rows in the board. (board is a list of lists)
-        # subtract 3 is same reason for testing horizontally 
-        for j in range(len(board)-3):
-            # print(len(board)): will output 6 for 6 rows
+                # check if we have started storing
+                # If there is no number stored in stored_num then store current_num
+                if stored_num is None:
+                    stored_num = current_num
+                
+                # If numbered stored is the same as the next number after it then continue checking
+                elif stored_num == current_num and current_num !=0:
+                    continue
+                # if it is not a equal string of numbers or we find a zero, there is no winner here
+                elif current_num != stored_num or current_num == 0:
+                    stored_num = None
+                    break
+            # check if we have a winner (the whole row was the same when checking)
+            if stored_num is not None:
+                return stored_num
 
-            # index 'j' increments for each test as we are moving down 1 row for every j+1 (testing vertically)
-            if board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 1:
-                return 1
-            elif board[j][i] == board[j+1][i] == board[j+2][i] == board[j+3][i] == 2:
-                return 2
+    # Check diagonal right to left
+    for i in range(len(board) - winning_length + 1):
+        for j in range(len(board[0]) - winning_length + 1):
+            stored_num = None
+            for k in range(winning_length):
+                    current_num = board[i+k][-j-winning_length]
+
+                    # check if we have started storing
+                    # If there is no number stored in stored_num then store current_num
+                    if stored_num is None:
+                        stored_num = current_num
+                
+                    # If numbered stored is the same as the next number after it then continue checking
+                    elif stored_num == current_num and current_num !=0:
+                        continue
+                    # if it is not a equal string of numbers or we find a zero, there is no winner here
+                    elif current_num != stored_num or current_num == 0:
+                        stored_num = None
+                        break
+                # check if we have a winner (the whole row was the same when checking)
+            if stored_num is not None:
+                return stored_num
+
 
     
 
-    # Checking diagonal wins
-    # subtract 3 from length of board as only need to iterate to 3rd row
-        # at rows 4-6, and go diagonally down to the right there are only 3, 2, and 1 blocks adjacent (so cannot be any wins here)
-    for i in range(len(board)-3):
-        
-        # 7 elements in each row. last element where there can be a win diagonally to the right is at board[0][3], i.e element 4
-            # from elements 5-7, check diagonally down to the right, there are only 3, 2 and 1 blocks respectively adjacent
-        for j in range(len(board[0])-3):
-
-            """
-            these 'for loops' have created a rectangle: 4 to the right and 3 down in the board starting at [0][0] (as a range for where diagonals can be checked from)
-            - the same will be done for checking diagonals right to left
-            """
-            
-
-            # right to left diagonal win
-
-            if board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 1:
-                return 1
-            elif board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == 2:
-                return 2
-
-            
-            # left to right diagonal win
-            # -j as we want to start from right side (i.e board[0][6])
-                # if j = 0, then -j = -0
-                # if j = 1, then -j = -1
-                # so on
-            # i remains the same as adding 1 to the index will still go down a row
-            
-            if board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 1:
-                return 1
-            elif board[i][-j-1] == board[i+1][-j-2] == board[i+2][-j-3] == board[i+3][-j-4] == 2:
-                return 2
-                
-        # Return 0 (no winner yet): this is outside each 'for loop' (let loops iterate first, if no winner found then only return 0)
-    return 0
+   
             
 
     
