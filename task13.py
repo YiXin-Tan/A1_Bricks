@@ -4,7 +4,6 @@ valid_players = []
 valid_token_wins = []
 valid_cpu_num = []
 column_choices= []
-# test
 for i in range(4, 51):
     valid_rows.append(str(i))
     valid_columns.append(str(i))
@@ -53,12 +52,12 @@ def create_board():
 def print_board(board):
     # Assigning variables
     board_string = ""
-    header = ("===" * (int(row_num)//int(2)) + " Connect4 " + "===" * (int(row_num)//int(2))) + "=="
+    header = ("===" * (int(row_num)//2) + " Connect4 " + "===" * (int(row_num)//2)) + "=="
     players = "Player 1: X       Player 2: O"
     line_break = ""
-    column_nums = ("  "+"   ".join([str(i+1) for i in range(len(board[0:]))]))
-    horizontal_line = " ---" * int(row_num)
-    footer = "====" * int(row_num) + "="
+    column_nums = "  "+"   ".join([str(i+1) for i in range(len(board[0]))])
+    horizontal_line = " ---" * int(column_num)
+    footer = "====" * int(column_num) + "="
     # .join can only work on multiple variables if they are in a list
     # \n = newline
     board_string = "\n".join([header, players, line_break, column_nums, horizontal_line]) 
@@ -128,7 +127,7 @@ def end_of_game(board): # Task 6
     or a draw.
 
     :param board: The game board, 2D list of 6 rows x 7 columns.
-    :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, 3 if draw.
+    :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, -1 if draw.
     """
 
             
@@ -139,7 +138,7 @@ def end_of_game(board): # Task 6
     
     # board is full
     if board_is_full(board):
-        return 3
+        return -1
 
     # game is not over
     return 0
@@ -199,7 +198,7 @@ def get_winning_player(board) -> int:
     # Iterate through each row in the board
     for row in board:
         # Iterate through range of whatever the row is (gotten by user) - winning length (token_win: user input)
-        for i in range(len(row)-winning_length):
+        for i in range(len(row)-winning_length+1):
 
             # store the number we are looking at here and initialise it with nothing stored 
             stored_num = None 
@@ -227,9 +226,10 @@ def get_winning_player(board) -> int:
             if stored_num is not None:
                 return stored_num
 
-    # Checking vertical win
+
+    # Check vertical
     for i in range(len(board[0])):
-        for j in range(len(board)-winning_length):
+        for j in range(len(board)-winning_length+1):
             stored_num = None
             for k in range(j, j+winning_length):
 
@@ -251,8 +251,7 @@ def get_winning_player(board) -> int:
             if stored_num is not None:
                 return stored_num
     
-
-   # Check diagonal left to right
+    # Check diagonal left to right
     for i in range(len(board) - winning_length + 1):
         for j in range(len(board[0]) - winning_length + 1):
             stored_num = None
@@ -280,7 +279,7 @@ def get_winning_player(board) -> int:
         for j in range(len(board[0]) - winning_length + 1):
             stored_num = None
             for k in range(winning_length):
-                    current_num = board[i+k][-j-winning_length]
+                    current_num = board[i+k][-j-k-1]
 
                     # check if we have started storing
                     # If there is no number stored in stored_num then store current_num
@@ -298,25 +297,76 @@ def get_winning_player(board) -> int:
             if stored_num is not None:
                 return stored_num
 
+    return 0
 
+
+def clear_screen():
+    """
+    Clears the terminal for Windows and Linux/MacOS.
+
+    :return: None
+    """
+    import os
+    os.system('cls' if os.name == 'nt' else 'clear')
     
 
-   
-            
+def local_game():
+    """
+    Runs a local 2 player game of Connect 4.
 
-    
-    
+    :return: None
+    """
+    # Implement your solution below
+    board = create_board()
+    player_num = int(num_players)
+    # initial player is assigned 1
+    current_player = 1 
+    # There is no previous column choice to tell players
+    prev_col_choice = None
+
+    while True:
+        clear_screen()
+
+        for row in board:
+            print(row)
+
+        # execute the turn
+        print_board(board)
+        prev_col_choice = None
+
+        if prev_col_choice:
+            next_player = (current_player % player_num) + 1
+            print(f"Player {next_player} has dropped in {prev_col_choice}")
 
 
+        prev_col_choice = execute_player_turn(current_player, board)
+        
+        check_winner = end_of_game(board)
+        print("winner:", check_winner)
+        if check_winner != 0: # check not continue
+            # draw
+            if check_winner == -1:
+                clear_screen()
+                print_board(board)
+                print("Draw")
+                break
+
+            # player wins
+            clear_screen()
+
+            for row in board:
+                print(row)
 
 
+            print_board(board)
+            print(f"Player {check_winner} wins")
+            break
+
+        current_player = (current_player % player_num) + 1
 
 if __name__ == "__main__":
     # Enter test code below
-    board = create_board()
-    move = execute_player_turn(1, board)
-    print_board(board)
-    print(move)
+    local_game()
 
 
 
