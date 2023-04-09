@@ -8,7 +8,7 @@ valid_cpu_num = []
 for i in range(4, 51):
     valid_rows.append(str(i))
     valid_columns.append(str(i))
-for i in range(2, 6):
+for i in range(1, 6):
     valid_players.append(str(i))
     valid_cpu_num.append(str(i))
 for i in range(4, 11):
@@ -24,14 +24,22 @@ def print_rules():
     :return: None
     """
     print("================= Rules =================")
-    print("Connect 4 is a two-player game where the")
-    print("objective is to get four of your pieces")
-    print("in a row either horizontally, vertically")
-    print("or diagonally. The game is played on a")
-    print("6x7 grid. The first player to get four")
-    print("pieces in a row wins the game. If the")
-    print("grid is filled and no player has won,")
-    print("the game is a draw.")
+    print("Local game: ")
+    print("1. Make your connect 4 board")
+    print("2. Choose number of human players")
+    print("3. Choose number of tokens adjacent in order to win")
+    print("4. Player 1 is assigned X and Player 2 is assigned O,")
+    print("   if number of players is larger than 2 (CPU and or")
+    print("   human) players will be assigned A, B, C...")
+
+    print("\nCPU game:")
+    print("1. Make your connect 4 board")
+    print("2. Choose number of human players")
+    print("3, Choose number of CPU players")
+    print("4. Choose number of tokens adjacent in order to win")
+    print("5. Player 1 is assigned X and Player 2 is assigned O,")
+    print("   if number of players is larger than 2 (CPU and or")
+    print("   human) players will be assigned A, B, C...")
     print("=========================================")
 
 def get_user_inputs(prompt, valid_inputs):
@@ -61,14 +69,13 @@ def print_board(board):
     row_num = len(board)
     board_string = ""
     header = ("===" * (int(row_num)//2) + " Connect4 " + "===" * (int(row_num)//2)) + "=="
-    players = "Player 1: X       Player 2: O"
     line_break = ""
     column_nums = "  "+"   ".join([str(i+1) for i in range(len(board[0]))])
     horizontal_line = " ---" * int(len(board[0]))
     footer = "====" * int(len(board[0])) + "="
     # .join can only work on multiple variables if they are in a list
     # \n = newline
-    board_string = "\n".join([header, players, line_break, column_nums, horizontal_line]) 
+    board_string = "\n".join([header, line_break, column_nums, horizontal_line]) 
 
 
     # iterate through rows in the 2D array
@@ -169,7 +176,8 @@ def board_is_full(board) -> bool:
     if any slot has a 0 then return false
     if no slot is 0 return True
     """
-
+    
+    # Check if any slot in the board is assigned 0 (empty)
     for row in board:
         for num in row:
             if num == 0:
@@ -181,30 +189,11 @@ def get_winning_player(board) -> int:
     """
     Checks if there is a winning player
 
-    :param board: The game board, 2D list of 6 rows x 7 columns.
-    :return: 0 if no winner, 1 if player 1 wins, 2 if player 2 wins
+    :param board: The game board, 2D list of any number of rows and columns up to 50
+    :return: The number of the player who wins (stored_num)
     """
-    # i = 0 
-    # j = 0
-    # element = board[i][j]
 
-    """
-    check horizontal:
-    1. Go through each row in board
-    2. For each row:
-        a) check if any 4 adjacent slots are equal to each other 
-            i) if they are equal: 
-                return 1 if slots have 1s in them
-                return 2 if slots have 2s in them
-
-    """
     global winning_length
-
-    # Checks if numbers in each row are not 1 or 2 (i.e no winners)
-    # for row in board:
-    # 	for i in range(len(row)-3):
-    # 		if row[i] != 1 or row[i] != 2:
-    # 			return 0
 
     # check horizontal
     # Iterate through each row in the board
@@ -515,65 +504,81 @@ def get_cpu_difficulty() -> int:
     user_input = int(get_user_inputs(prompt = "Please select a difficulty (1: Easy, 2: Medium, 3; Hard): ", valid_inputs = ["1", "2", "3"]))
     return user_input
     
-# def local_game():
-#     """
-#     Runs a local 2 player game of Connect 4.
+def local_game():
+    """
+    Runs a local game of Connect 4.
 
-#     :return: None
-#     """
-#     # Implement your solution below
-#     board = create_board()
-#     player_num = int(num_players)
-#     # initial player is assigned 1
-#     current_player = 1 
-#     # There is no previous column choice to tell players
-#     prev_col_choice = None
+    :return: None
+    """
+    column_num = get_user_inputs(prompt="Enter a number of columns for the gameboard (4-50): ", valid_inputs = valid_rows)
+    row_num = get_user_inputs(prompt= "Enter a number of rows for the gameboard (4-50):  ", valid_inputs = valid_columns) 
+    num_players = get_user_inputs(prompt="Enter a number of human players (1-5): ", valid_inputs = valid_players)
+    token_win = get_user_inputs(prompt="Enter the number of tokens adjacent for a player to win (4-10): ", valid_inputs = valid_token_wins)
 
-#     while True:
-#         clear_screen()
+    
+    global winning_length
+    winning_length = int(token_win)
 
-#         # execute the turn
-#         print_board(board)
-#         prev_col_choice = None
+    board = create_board(row_num, column_num)
+    total_player_num = int(num_players)
 
-#         if prev_col_choice:
-#             next_player = (current_player % player_num) + 1
-#             print(f"Player {next_player} has dropped in {prev_col_choice}")
+    # initial player is assigned 1
+    current_player = 1 
+    # There is no previous column choice to tell players
+    prev_col_choice = None
 
+    while True:
+        clear_screen()
+        # execute the turn
+        print_board(board)
 
-#         prev_col_choice = execute_player_turn(current_player, board)
-        
-#         check_winner = end_of_game(board)
-#         print("winner:", check_winner)
-#         if check_winner != 0: # check not continue
-#             # draw
-#             if check_winner == -1:
-#                 clear_screen()
-#                 print_board(board)
-#                 print("Draw")
-#                 break
+        # if there was a previous move (turn 1 has no previous move), then print that out
+        # if prev_col_choice:
+        #     last_player = (current_player % total_player_num) -1
+        #     print(f"Player {last_player} has dropped in {prev_col_choice}")
 
-#             # player wins
-#             clear_screen()
-
-#             for row in board:
-#                 print(row)
+        if prev_col_choice:
+            if current_player == 1:
+                last_player = total_player_num
+            else:
+                last_player = current_player - 1
+            print(f"Player {last_player} has dropped in {prev_col_choice}")
 
 
-#             print_board(board)
-#             print(f"Player {check_winner} wins")
-#             break
+        prev_col_choice = execute_player_turn(current_player, board)
 
-#         current_player = (current_player % player_num) + 1
+        # invokes end_of_game() function to check if there is a winner or not, and if there is a winner who is it 
+        check_winner = end_of_game(board)
+        print("winner:", check_winner)
+
+        # check not continue
+        if check_winner != 0: 
+            # draw
+            if check_winner == -1:
+                clear_screen()
+                print_board(board)
+                print("Draw")
+                break
+
+            # player wins
+            clear_screen()
+            print_board(board)
+            print(f"Player {check_winner} wins")
+            break
+
+        current_player = (current_player % total_player_num) + 1
+
+
+
 def game():
     """
-    Runs a game of Connect 4 against the computer.
+    Runs a game of Connect 4 against the computer with one or more human players
 
     :return: None
     """
     column_num = get_user_inputs(prompt="Enter a number of columns for the gameboard (4-50): ", valid_inputs = valid_rows)
     row_num = get_user_inputs(prompt= "Enter a number of rows for the gameboard (4-50):  ", valid_inputs = valid_columns)
-    num_players = get_user_inputs(prompt="Enter a number of human players (2-5): ", valid_inputs = valid_players)
+    num_players = get_user_inputs(prompt="Enter a number of human players (1-5): ", valid_inputs = valid_players)
     num_bots = get_user_inputs(prompt="Enter a number of bot players (2-5): ", valid_inputs = valid_players)
     token_win = get_user_inputs(prompt="Enter the number of tokens adjacent for a player to win (4-10): ", valid_inputs = valid_token_wins)
 
@@ -597,7 +602,10 @@ def game():
 
         # if there was a previous move (turn 1 has no previous move), then print that out
         if prev_col_choice:
-            last_player = (current_player % total_player_num) -1 
+            if current_player == 1:
+                last_player = total_player_num
+            else:
+                last_player = current_player - 1
             print(f"Player {last_player} has dropped in {prev_col_choice}")
 
         if current_player <= int(num_players):
@@ -630,10 +638,6 @@ def game():
 
             # player wins
             clear_screen()
-
-            for row in board:
-                print(row)
-
             print_board(board)
             print(f"Player {check_winner} wins")
             break
@@ -650,8 +654,9 @@ def main():
     menu_string = """=============== Main Menu ===============
 Welcome to Connect 4!
 1. View Rules
-2. Play a game
-3. Exit
+2. Play a cpu game
+3. Play a local game
+4. Exit
 =========================================
 Enter a number: """
 
@@ -661,17 +666,20 @@ Enter a number: """
         # Ask user for an option (1-4) as stated in the menu string above
         user_input = get_user_inputs(
             prompt=menu_string,
-            valid_inputs=["1", "2", "3"]
+            valid_inputs=["1", "2", "3", "4"]
         )
         # Print rules
         if user_input == "1":
             clear_screen()
             print_rules()
-        # Plays game
+        # Plays game with bots and humans
         if user_input == "2":
             return game()
-        # Quits game
+        # Plays local game
         if user_input == "3":
+            return local_game()       
+        # Quits game
+        if user_input == "4":
             print("You have exited the game")
             return
 
