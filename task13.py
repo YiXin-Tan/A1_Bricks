@@ -1,21 +1,25 @@
 import random
 
-valid_rows = []
-valid_columns = []
-valid_players = []
-valid_token_wins = []
-valid_cpu_num = []
+# Global constants
+VALID_ROWS = []
+VALID_COLUMNS = []
+VALID_PLAYERS = []
+VALID_TOKEN_WINS = []
+VALID_CPU_NUM = []
 for i in range(4, 51):
-    valid_rows.append(str(i))
-    valid_columns.append(str(i))
+    VALID_ROWS.append(str(i))
+    VALID_COLUMNS.append(str(i))
 for i in range(1, 6):
-    valid_players.append(str(i))
-    valid_cpu_num.append(str(i))
+    VALID_PLAYERS.append(str(i))
+    VALID_CPU_NUM.append(str(i))
 for i in range(4, 11):
-    valid_token_wins.append(str(i))
+    VALID_TOKEN_WINS.append(str(i))
 
-global winning_length
-winning_length = None
+COLUMN_NUM = 0
+ROW_NUM = 0
+NUM_PLAYERS = 0
+NUM_BOTS = 0
+WINNING_LENGTH = 0
 
 def print_rules():
     """
@@ -52,27 +56,31 @@ def get_user_inputs(prompt, valid_inputs):
         #re ask for input from the user
         user_input = input(prompt)
         #return the user_input
-    return user_input
+    return int(user_input)
 
 
 def create_board(row_num, column_num):
     game_board = []
 
-    for i in range(int(row_num)):
-        row = [0] * int(column_num)
+    for i in range(row_num):
+        row = [0] * column_num
         game_board.append(row)
     return game_board
 
 
 def print_board(board):
     # Assigning variables
-    row_num = len(board)
     board_string = ""
-    header = ("===" * (int(row_num)//2) + " Connect4 " + "===" * (int(row_num)//2)) + "=="
+    header = ("===" * (ROW_NUM//2) + " Connect4 " + "===" * (ROW_NUM//2)) + "=="
     line_break = ""
-    column_nums = "  "+"   ".join([str(i+1) for i in range(len(board[0]))])
-    horizontal_line = " ---" * int(len(board[0]))
-    footer = "====" * int(len(board[0])) + "="
+    column_nums = "  "
+    for i in range(1, COLUMN_NUM + 1):
+        if i < 9:
+            column_nums += f"{i}   "
+        else:
+            column_nums += f"{i}  "
+    horizontal_line = " ---" * COLUMN_NUM
+    footer = "====" * COLUMN_NUM + "="
     # .join can only work on multiple variables if they are in a list
     # \n = newline
     board_string = "\n".join([header, line_break, column_nums, horizontal_line]) 
@@ -104,7 +112,7 @@ def get_display_char(num):
 def drop_piece(board, player, column: int):
     
     check_column = column - 1
-    check_row = int(len(board)) - 1
+    check_row = ROW_NUM - 1
 
 
     while check_row >= 0:
@@ -125,19 +133,17 @@ def execute_player_turn(player, board): # Task 5
 
         # Column choice is assigned function validate input, prompting the specific player
         valid_inputs = []
-        for i in range(len(board[0])):
+        for i in range(COLUMN_NUM):
             valid_inputs.append(str(i+1))
 
         column_choice = get_user_inputs(f'Player {player}, please enter the column you would like to drop your piece into: ', valid_inputs)
         
         # Reassign successful_drop to drop_piece
-        successful_drop = drop_piece(board, player, int(column_choice))
+        successful_drop = drop_piece(board, player, column_choice)
         # print(successful_drop)
         
         if successful_drop == True:
-
-            #use int() as column_choice choice has class string 
-            return int(column_choice)
+            return column_choice
         print("That column is full, please try again.")
 
 def end_of_game(board): # Task 6
@@ -192,14 +198,11 @@ def get_winning_player(board) -> int:
     :param board: The game board, 2D list of any number of rows and columns up to 50
     :return: The number of the player who wins (stored_num)
     """
-
-    global winning_length
-
     # check horizontal
     # Iterate through each row in the board
     for row in board:
         # Iterate through range of whatever the row is (gotten by user) - winning length (token_win: user input)
-        for i in range(len(row)-winning_length+1):
+        for i in range(len(row)-WINNING_LENGTH+1):
 
             # store the number we are looking at here and initialise it with nothing stored 
             stored_num = None 
@@ -207,7 +210,7 @@ def get_winning_player(board) -> int:
             # Iterate through range(starting index of row, starting index + winning length)
                 # We do this as we dont know how many indexes in the row we have to check. If we did we could hard code it like we did in task 6 for checking horizontal wins
                 # So in this case we loop it 
-            for j in range(i, i+winning_length):
+            for j in range(i, i+WINNING_LENGTH):
                 # start at the first index in the row 
                 current_num = row[j]
 
@@ -229,10 +232,10 @@ def get_winning_player(board) -> int:
 
 
     # Check vertical
-    for i in range(len(board[0])):
-        for j in range(len(board)-winning_length+1):
+    for i in range(COLUMN_NUM):
+        for j in range(ROW_NUM-WINNING_LENGTH+1):
             stored_num = None
-            for k in range(j, j+winning_length):
+            for k in range(j, j+WINNING_LENGTH):
 
                 current_num = board[k][i]
 
@@ -253,10 +256,10 @@ def get_winning_player(board) -> int:
                 return stored_num
     
     # Check diagonal left to right
-    for i in range(len(board) - winning_length + 1):
-        for j in range(len(board[0]) - winning_length + 1):
+    for i in range(ROW_NUM - WINNING_LENGTH + 1):
+        for j in range(COLUMN_NUM - WINNING_LENGTH + 1):
             stored_num = None
-            for k in range(winning_length):
+            for k in range(WINNING_LENGTH):
                 current_num = board[i+k][j+k]
 
                 # check if we have started storing
@@ -276,10 +279,10 @@ def get_winning_player(board) -> int:
                 return stored_num
 
     # Check diagonal right to left
-    for i in range(len(board) - winning_length + 1):
-        for j in range(len(board[0]) - winning_length + 1):
+    for i in range(ROW_NUM - WINNING_LENGTH + 1):
+        for j in range(COLUMN_NUM - WINNING_LENGTH + 1):
             stored_num = None
-            for k in range(winning_length):
+            for k in range(WINNING_LENGTH):
                     current_num = board[i+k][-j-k-1]
 
                     # check if we have started storing
@@ -327,7 +330,7 @@ def cpu_player_easy(board, player):
     # While cpu has not dropped
     while not cpu_has_dropped:
         # Choose a random column 
-        ran_int = random.randint(1, len(board))
+        ran_int = random.randint(1, ROW_NUM)
         # Drop cpu piece into that column
         cpu_has_dropped = drop_piece(board, player, ran_int)	
         # if drop_piece() returned True then return ran_int otherwise keep looping
@@ -342,13 +345,13 @@ def clone_board(board):
     :return: cloned board
     """
     # create board of same number of rows and height
-    cloned_board = create_board(len(board), len(board[0]))
+    cloned_board = create_board(ROW_NUM, COLUMN_NUM)
     # for each item in the param board, copy over to cloned board
 
     # for each row
-    for i in range(len(board)):
+    for i in range(ROW_NUM):
     # for each value in each row
-        for j in range(len(board[0])):
+        for j in range(COLUMN_NUM):
             # cloning the values in each slot in real board to cloned board (mimicking the real board to check wins)
             cloned_board[i][j] = board[i][j]
     return cloned_board
@@ -370,7 +373,7 @@ def get_winning_place(board, player):
     # drop the piece into the cloned board
     # if this wins the game, drop the piece into the real board and return the column
 
-    for j in range(len(board[0])):
+    for j in range(COLUMN_NUM):
         # print(j)
         cloned_board = clone_board(board)
         cpu_drop = drop_piece(cloned_board, player, j)
@@ -404,7 +407,7 @@ def get_blocking_place(board, player):
     # if there is no win to block then return None and continue playing
 
     # check opponent block
-    for j in range(len(board[0])):
+    for j in range(COLUMN_NUM):
         cloned_board = clone_board(board)
         opponent = 2 if player == 1 else 1
         player_win = drop_piece(cloned_board, opponent, j)
@@ -473,16 +476,16 @@ def cpu_player_hard(board, player):
     
     # otherwise return random in middle
     # the index range is (3)
-    for i in range(len(board)//2+1):
+    for i in range(ROW_NUM//2+1):
         # +1
         # this will try drop into columns 3-6
-        col = len(board)//2+i
+        col = ROW_NUM//2+i
         if drop_piece(board, player, col):
             return col
 
         # -1
         # this will try to drop into columns 3-0
-        col = len(board)//2-i
+        col = ROW_NUM//2-i
         if drop_piece(board, player, col):
             return col
         
@@ -510,17 +513,19 @@ def local_game():
 
     :return: None
     """
-    column_num = get_user_inputs(prompt="Enter a number of columns for the gameboard (4-50): ", valid_inputs = valid_rows)
-    row_num = get_user_inputs(prompt= "Enter a number of rows for the gameboard (4-50):  ", valid_inputs = valid_columns) 
-    num_players = get_user_inputs(prompt="Enter a number of human players (1-5): ", valid_inputs = valid_players)
-    token_win = get_user_inputs(prompt="Enter the number of tokens adjacent for a player to win (4-10): ", valid_inputs = valid_token_wins)
+    global COLUMN_NUM
+    global ROW_NUM
+    global NUM_PLAYERS
+    global NUM_BOTS
+    global WINNING_LENGTH
 
-    
-    global winning_length
-    winning_length = int(token_win)
+    COLUMN_NUM = get_user_inputs(prompt="Enter a number of columns for the gameboard (4-50): ", valid_inputs = VALID_ROWS)
+    ROW_NUM = get_user_inputs(prompt= "Enter a number of rows for the gameboard (4-50):  ", valid_inputs = VALID_COLUMNS)
+    NUM_PLAYERS = get_user_inputs(prompt="Enter a number of human players (1-5): ", valid_inputs = VALID_PLAYERS)
+    WINNING_LENGTH = get_user_inputs(prompt="Enter the number of tokens adjacent for a player to win (4-10): ", valid_inputs = VALID_TOKEN_WINS)
 
-    board = create_board(row_num, column_num)
-    total_player_num = int(num_players)
+    board = create_board(ROW_NUM, COLUMN_NUM)
+    total_player_num = int(NUM_PLAYERS)
 
     # initial player is assigned 1
     current_player = 1 
@@ -576,21 +581,24 @@ def game():
 
     :return: None
     """
-    column_num = get_user_inputs(prompt="Enter a number of columns for the gameboard (4-50): ", valid_inputs = valid_rows)
-    row_num = get_user_inputs(prompt= "Enter a number of rows for the gameboard (4-50):  ", valid_inputs = valid_columns)
-    num_players = get_user_inputs(prompt="Enter a number of human players (1-5): ", valid_inputs = valid_players)
-    num_bots = get_user_inputs(prompt="Enter a number of bot players (2-5): ", valid_inputs = valid_players)
-    token_win = get_user_inputs(prompt="Enter the number of tokens adjacent for a player to win (4-10): ", valid_inputs = valid_token_wins)
+    global COLUMN_NUM
+    global ROW_NUM
+    global NUM_PLAYERS
+    global NUM_BOTS
+    global WINNING_LENGTH
 
-    global winning_length
-    winning_length = int(token_win)
+    COLUMN_NUM = get_user_inputs(prompt="Enter a number of columns for the gameboard (4-50): ", valid_inputs=VALID_ROWS)
+    ROW_NUM = get_user_inputs(prompt= "Enter a number of rows for the gameboard (4-50):  ", valid_inputs=VALID_COLUMNS)
+    NUM_PLAYERS = get_user_inputs(prompt="Enter a number of human players (1-5): ", valid_inputs=VALID_PLAYERS)
+    NUM_BOTS = get_user_inputs(prompt="Enter a number of bot players (2-5): ", valid_inputs=VALID_PLAYERS)
+    WINNING_LENGTH = get_user_inputs(prompt="Enter the number of tokens adjacent for a player to win (4-10): ", valid_inputs=VALID_TOKEN_WINS)
 
-    board = create_board(row_num, column_num)
+    board = create_board(ROW_NUM, COLUMN_NUM)
     # initial player is assigned 1
     current_player = 1 
     # There is no previous column choice to tell players
     prev_col_choice = None
-    total_player_num = int(num_players) + int(num_bots)
+    total_player_num = int(NUM_PLAYERS) + int(NUM_BOTS)
     # get cpu difficulty (1 = easy, 2 = med, 3 = hard)
     cpu_difficulty: int = get_cpu_difficulty()
 
@@ -608,9 +616,9 @@ def game():
                 last_player = current_player - 1
             print(f"Player {last_player} has dropped in {prev_col_choice}")
 
-        if current_player <= int(num_players):
+        if current_player <= int(NUM_PLAYERS):
             prev_col_choice = execute_player_turn(current_player, board)
-        elif current_player > int(num_players):
+        elif current_player > int(NUM_PLAYERS):
             # this is the cpu turn
 
             # Easy difficulty
@@ -652,13 +660,13 @@ def main():
     :return: None
     """
     menu_string = """=============== Main Menu ===============
-Welcome to Connect 4!
-1. View Rules
-2. Play a cpu game
-3. Play a local game
-4. Exit
-=========================================
-Enter a number: """
+    Welcome to Connect 4!
+    1. View Rules
+    2. Play a cpu game
+    3. Play a local game
+    4. Exit
+    =========================================
+    Enter a number: """
 
     clear_screen()
     while True:
@@ -669,17 +677,17 @@ Enter a number: """
             valid_inputs=["1", "2", "3", "4"]
         )
         # Print rules
-        if user_input == "1":
+        if user_input == 1:
             clear_screen()
             print_rules()
         # Plays game with bots and humans
-        if user_input == "2":
+        if user_input == 2:
             return game()
         # Plays local game
-        if user_input == "3":
+        if user_input == 3:
             return local_game()       
         # Quits game
-        if user_input == "4":
+        if user_input == 4:
             print("You have exited the game")
             return
 
