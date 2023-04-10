@@ -130,7 +130,8 @@ def get_display_char(num):
     """
     Gets display character for a number on the board
     :param num: The player's number
-    :return: The player's token/display character to be displayed
+
+    :return: The player's token character to be displayed
     """
     # If the num in a slot equals 0 return an empty string
     if num == 0:
@@ -327,8 +328,6 @@ def local_2_player_game():
 
     :return: None
     """
-    # TODO: improve docstring
-
     # invoking the function create_board()
     board = create_board()
 
