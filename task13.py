@@ -71,8 +71,15 @@ def create_board(row_num, column_num):
 def print_board(board):
     # Assigning variables
     board_string = ""
-    header = ("===" * (ROW_NUM//2) + " Connect4 " + "===" * (ROW_NUM//2)) + "=="
-    line_break = ""
+    header = ("===" * (COLUMN_NUM//2) + " Connect4 " + "===" * (COLUMN_NUM//2)) + "=="
+
+    players_num_and_token = ""
+    for i in range(1,NUM_PLAYERS+NUM_BOTS+1):
+        if i <= NUM_PLAYERS:
+            players_num_and_token += f"Player {i}: {get_display_char(i)} (Human)\n"
+        else:
+            players_num_and_token += f"Player {i}: {get_display_char(i)} (Robot)\n"
+
     column_nums = "  "
     for i in range(1, COLUMN_NUM + 1):
         if i < 9:
@@ -83,7 +90,7 @@ def print_board(board):
     footer = "====" * COLUMN_NUM + "="
     # .join can only work on multiple variables if they are in a list
     # \n = newline
-    board_string = "\n".join([header, line_break, column_nums, horizontal_line]) 
+    board_string = "\n".join([header , players_num_and_token, column_nums, horizontal_line])
 
 
     # iterate through rows in the 2D array
@@ -549,12 +556,10 @@ def local_game():
                 last_player = current_player - 1
             print(f"Player {last_player} has dropped in {prev_col_choice}")
 
-
         prev_col_choice = execute_player_turn(current_player, board)
 
-        # invokes end_of_game() function to check if there is a winner or not, and if there is a winner who is it 
+        # invokes end_of_game() function to check if there is a winner or not, and if there is a winner who is it
         check_winner = end_of_game(board)
-        print("winner:", check_winner)
 
         # check not continue
         if check_winner != 0: 
@@ -598,7 +603,7 @@ def game():
     current_player = 1 
     # There is no previous column choice to tell players
     prev_col_choice = None
-    total_player_num = int(NUM_PLAYERS) + int(NUM_BOTS)
+    total_player_num = NUM_PLAYERS + NUM_BOTS
     # get cpu difficulty (1 = easy, 2 = med, 3 = hard)
     cpu_difficulty: int = get_cpu_difficulty()
 
@@ -616,9 +621,9 @@ def game():
                 last_player = current_player - 1
             print(f"Player {last_player} has dropped in {prev_col_choice}")
 
-        if current_player <= int(NUM_PLAYERS):
+        if current_player <= NUM_PLAYERS:
             prev_col_choice = execute_player_turn(current_player, board)
-        elif current_player > int(NUM_PLAYERS):
+        elif current_player > NUM_PLAYERS:
             # this is the cpu turn
 
             # Easy difficulty
@@ -635,7 +640,6 @@ def game():
 
         # invokes end_of_game() function to check if there is a winner or not, and if there is a winner who is it  
         check_winner = end_of_game(board)
-        print("winner:", check_winner)
         if check_winner != 0: # check not continue
             # draw
             if check_winner == -1:
@@ -660,13 +664,13 @@ def main():
     :return: None
     """
     menu_string = """=============== Main Menu ===============
-    Welcome to Connect 4!
-    1. View Rules
-    2. Play a cpu game
-    3. Play a local game
-    4. Exit
-    =========================================
-    Enter a number: """
+Welcome to Connect 4!
+1. View Rules
+2. Play a cpu game
+3. Play a local game
+4. Exit
+=========================================
+Enter a number: """
 
     clear_screen()
     while True:
