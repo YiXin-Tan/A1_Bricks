@@ -105,7 +105,7 @@ def print_board(board):
         if i <= NUM_PLAYERS:
             players_num_and_token += f"Player {i}: {get_display_char(i)} (Human)\n"
         else:
-            players_num_and_token += f"Player {i}: {get_display_char(i)} (Robot)\n"
+            players_num_and_token += f"Player {i}: {get_display_char(i)} (CPU)\n"
 
     column_nums = "  "
     for i in range(1, COLUMN_NUM + 1):
@@ -204,7 +204,7 @@ def end_of_game(board):
     or a draw.
 
     :param board: The game board, 2D list of 6 rows x 7 columns.
-    :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins, -1 if draw.
+    :return: 0 if game is not over, 1 if player 1 wins, 2 if player 2 wins and so on... -1 if draw.
     """
 
     # player has won
@@ -369,8 +369,8 @@ def cpu_player_easy(board, player):
     Executes a move for the CPU on easy difficulty. This function 
     plays a randomly selected column.
 
-    :param board: The game board, 2D list of 6x7 dimensions.
-    :param player: The player whose turn it is, integer value of 1 or 2.
+    :param board: The game board
+    :param player: The player whose turn it is
     :return: Column that the piece was dropped into, int.
     """
 
@@ -414,8 +414,8 @@ def get_winning_place(board, player):
     This function checks for an immediate win and plays that move if possible
     This function will take precedence over get_blocking_piece()
    
-    :param board: The game board, 2D list of 6x7 dimensions.
-    :param player: The player whose turn it is, integer value of 1 or 2.
+    :param board: The game board
+    :param player: The player whose turn it is, integer value of 1,2,3,...5
     :return: Column of the winning place or none if there is no winning place
     """
     # for each col
@@ -443,9 +443,9 @@ def get_blocking_place(board, player):
     Please note  this function accepts player in favour if the block, then switches to the opponent to simulate their win
 
 
-    :param board: The game board, 2D list of 6x7 dimensions.
-    :param player: The player whose turn it is, integer value of 1 or 2.
-    :return: The column of the blocking place or none if there is no win to bloc
+    :param board: The game board
+    :param player: The player whose turn it is
+    :return: The column of the blocking place or none if there is no win to block
     """
 
     # for each col
@@ -475,8 +475,8 @@ def cpu_player_medium(board, player):
     for the opponent and blocks that move. If neither of these are 
     possible, it plays a random move.
 
-    :param board: The game board, 2D list of 6x7 dimensions.
-    :param player: The player whose turn it is, integer value of 1 or 2.
+    :param board: The game board
+    :param player: The player whose turn it is
     :return: Column that the piece was dropped into, int.
     """
 
@@ -511,8 +511,8 @@ def cpu_player_hard(board, player):
         3. Place somewhere in the middle
         4. Place randomly
 
-    :param board: The game board, 2D list of 6x7 dimensions.
-    :param player: The player whose turn it is, integer value of 1 or 2.
+    :param board: The game board
+    :param player: The player whose turn it is
     :return: Column that the piece was dropped into, int.
     """
     # check for a winning piece
